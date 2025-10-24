@@ -1,0 +1,145 @@
+<div class="preview-container">
+  <!-- Header con Logo -->
+  <header class="header">
+    <div class="header-content">
+<!-- Test: mostra testo se logo non carica -->
+<div class="logo-container">
+  <img src="../../assets/logo.png" 
+       alt="Logo" 
+       class="logo"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+  <span style="display:none; font-size: 1.5rem; font-weight: bold; color: #4F46E5;">
+    ITSocial
+  </span>
+</div>
+      <button pButton 
+              label="Accedi" 
+              icon="pi pi-sign-in" 
+              class="p-button-outlined p-button-rounded header-button"
+              (click)="goToLogin()">
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        Piattaforma di Networking<br>
+        <span class="accent-text">per Studenti Universitari</span>
+      </h1>
+      <p class="hero-subtitle">
+        Una community professionale dedicata agli studenti che vogliono 
+        confrontarsi, collaborare e crescere insieme nel loro percorso accademico.
+      </p>
+      <div class="hero-actions">
+        <button pButton 
+                label="Inizia Ora" 
+                icon="pi pi-arrow-right" 
+                iconPos="right"
+                class="p-button-lg p-button-raised"
+                (click)="goToLogin()">
+        </button>
+      </div>
+    </div>
+    
+    <div class="hero-image">
+      <div class="image-placeholder">
+        <i class="pi pi-graduation-cap placeholder-icon"></i>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="section-header">
+      <h2 class="section-title">Funzionalità Principali</h2>
+      <p class="section-subtitle">
+        Tutto ciò che ti serve per migliorare la tua esperienza universitaria
+      </p>
+    </div>
+    
+    <div class="features-grid">
+      <p-card *ngFor="let feature of features" class="feature-card">
+        <ng-template pTemplate="header">
+          <div class="feature-icon-container">
+            <i [class]="feature.icon + ' feature-icon'"></i>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="title">
+          <h3 class="feature-title">{{ feature.title }}</h3>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <p class="feature-description">{{ feature.description }}</p>
+        </ng-template>
+      </p-card>
+    </div>
+  </section>
+
+  <!-- Benefits Section -->
+  <section class="benefits">
+    <div class="benefits-content">
+      <div class="benefits-text">
+        <h2 class="benefits-title">Una Community Seria e Professionale</h2>
+        <div class="benefits-list">
+          <div class="benefit-item">
+            <i class="pi pi-check-circle benefit-icon"></i>
+            <div>
+              <h4>Ambiente Rispettoso</h4>
+              <p>Una piattaforma moderata dove il rispetto reciproco è fondamentale</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <i class="pi pi-check-circle benefit-icon"></i>
+            <div>
+              <h4>Focus Accademico</h4>
+              <p>Contenuti orientati allo studio e alla crescita professionale</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <i class="pi pi-check-circle benefit-icon"></i>
+            <div>
+              <h4>Connessioni Autentiche</h4>
+              <p>Costruisci relazioni significative con colleghi e compagni di studio</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="benefits-visual">
+        <div class="visual-card">
+          <i class="pi pi-chart-line visual-icon"></i>
+          <h4>Crescita Collaborativa</h4>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Final -->
+  <section class="cta-section">
+    <p-card class="cta-card">
+      <ng-template pTemplate="content">
+        <div class="cta-content">
+          <h2 class="cta-title">Entra a Far Parte della Community</h2>
+          <p class="cta-text">
+            Inizia oggi il tuo percorso di networking accademico e scopri 
+            nuove opportunità di collaborazione e crescita
+          </p>
+          <button pButton 
+                  label="Accedi alla Piattaforma" 
+                  icon="pi pi-arrow-right" 
+                  iconPos="right"
+                  class="p-button-lg p-button-raised"
+                  (click)="goToLogin()">
+          </button>
+        </div>
+      </ng-template>
+    </p-card>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p>&copy; 2024 Student Community Platform. Tutti i diritti riservati.</p>
+    </div>
+  </footer>
+</div>
