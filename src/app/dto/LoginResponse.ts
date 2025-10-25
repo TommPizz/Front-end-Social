@@ -4,7 +4,7 @@ import { RuoloDto } from "./RuoloDto";
 
 export interface LoginResponse {
   token: string;
-  email: string;
+  username: string;
   nome: string;
   cognome: string;
   ruoli: RuoloDto[];

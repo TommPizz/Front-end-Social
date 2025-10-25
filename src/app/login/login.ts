@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      username: ['', [Validators.required]],
       password: ['', Validators.required]
     });
   }
@@ -49,7 +49,7 @@ ngOnInit(): void {
         next: () => this.isLoading = false,
         error: (error) => {
           this.isLoading = false;
-          this.errorMessage = 'Email o password errati';
+          this.errorMessage = 'Username o password errati';
           console.error('Login error:', error);
         }
       });
