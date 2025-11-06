@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth';
 import { RegistrazioneRequest } from '../dto/RegistrazioneRequest';
@@ -16,29 +15,35 @@ import { RegistrazioneRequest } from '../dto/RegistrazioneRequest';
 export class Registrazione implements OnInit {
   form!: FormGroup;
   loading = false;
-  error: string | null = null;
+  erroriBackend: any = {}; 
+  errorMessage: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef 
   ) {}
 
-ngOnInit(): void {
-  this.form = this.fb.group({
-    nome: ['', Validators.required],
-    cognome: ['', Validators.required],
-    username: ['', [Validators.required]], 
-    password: ['', Validators.required],
-    codiceFiscale: ['', Validators.required]
-  });
-}
-
+  ngOnInit(): void {
+    this.form = this.fb.group({
+      nome: ['', Validators.required],
+      cognome: ['', Validators.required],
+      username: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      codiceFiscale: ['', [Validators.required, Validators.minLength(16), Validators.maxLength(16)]]
+    });
+  }
 
   onSubmit() {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    
     this.loading = true;
-    this.error = null;
+    this.erroriBackend = {};
+    this.errorMessage = null;
 
     const request: RegistrazioneRequest = this.form.value;
 
@@ -49,8 +54,44 @@ ngOnInit(): void {
       },
       error: (err) => {
         this.loading = false;
-        this.error = err?.error?.message || 'Errore durante la registrazione';
+        console.log('Errore completo:', err);
+        console.log('err.error:', err.error);
+        
+        if (err?.error?.errori) {
+          this.erroriBackend = err.error.errori;
+          console.log('Errori backend assegnati:', this.erroriBackend);
+          this.cdr.detectChanges(); 
+        } else if (err?.error?.message) {
+          this.errorMessage = err.error.message;
+        } else {
+          this.errorMessage = 'Errore durante la registrazione';
+        }
       }
     });
+  }
+
+  getErrore(campo: string): string | null {
+    // 1️ Errori backend
+    if (this.erroriBackend && this.erroriBackend[campo]) {
+      return this.erroriBackend[campo];
+    }
+    
+    // 2 Errori form Angular
+    const control = this.form.get(campo);
+    if (control && control.invalid && control.touched) {
+      if (control.errors?.['required']) {
+        return 'Questo campo è obbligatorio';
+      }
+      if (control.errors?.['minlength']) {
+        const min = control.errors['minlength'].requiredLength;
+        return `Minimo ${min} caratteri`;
+      }
+      if (control.errors?.['maxlength']) {
+        const max = control.errors['maxlength'].requiredLength;
+        return `Massimo ${max} caratteri`;
+      }
+    }
+    
+    return null;
   }
 }

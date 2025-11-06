@@ -17,41 +17,78 @@
     <h2>Registrati</h2>
 
     <!-- Campo Nome -->
-    <div>
+    <div class="form-group">
       <label>Nome</label>
-      <input formControlName="nome" type="text" placeholder="Inserisci il tuo nome" />
+      <input 
+        formControlName="nome" 
+        type="text" 
+        placeholder="Inserisci il tuo nome"
+        [class.input-error]="getErrore('nome')" />
+      <span class="error-message" *ngIf="getErrore('nome')">
+        {{ getErrore('nome') }}
+      </span>
     </div>
 
     <!-- Campo Cognome -->
-    <div>
+    <div class="form-group">
       <label>Cognome</label>
-      <input formControlName="cognome" type="text" placeholder="Inserisci il tuo cognome" />
+      <input 
+        formControlName="cognome" 
+        type="text" 
+        placeholder="Inserisci il tuo cognome"
+        [class.input-error]="getErrore('cognome')" />
+      <span class="error-message" *ngIf="getErrore('cognome')">
+        {{ getErrore('cognome') }}
+      </span>
     </div>
 
     <!-- Campo Username -->
-    <div>
+    <div class="form-group">
       <label>Username</label>
-      <input formControlName="username" type="text" placeholder="Scegli un username" />
+      <input 
+        formControlName="username" 
+        type="username" 
+        [class.input-error]="getErrore('username')" />
+      <span class="error-message" *ngIf="getErrore('username')">
+        {{ getErrore('username') }}
+      </span>
     </div>
 
     <!-- Campo Password -->
-    <div>
+    <div class="form-group">
       <label>Password</label>
-      <input formControlName="password" type="password" placeholder="Crea una password" />
+      <input 
+        formControlName="password" 
+        type="password" 
+        placeholder="Minimo 8 caratteri"
+        [class.input-error]="getErrore('password')" />
+      <span class="error-message" *ngIf="getErrore('password')">
+        {{ getErrore('password') }}
+      </span>
     </div>
 
     <!-- Campo Codice Fiscale -->
-    <div>
+    <div class="form-group">
       <label>Codice Fiscale</label>
-      <input formControlName="codiceFiscale" type="text" placeholder="Inserisci il codice fiscale" />
+      <input 
+        formControlName="codiceFiscale" 
+        type="text" 
+        placeholder="16 caratteri (es. RSSMRA80A01H501U)"
+        maxlength="16"
+        [class.input-error]="getErrore('codiceFiscale')"
+        style="text-transform: uppercase;" />
+      <!-- 👇 QUESTO MOSTRA L'ERRORE -->
+      <span class="error-message" *ngIf="getErrore('codiceFiscale')">
+        {{ getErrore('codiceFiscale') }}
+      </span>
     </div>
 
     <!-- Bottone Submit -->
-    <button type="submit" [disabled]="form.invalid || loading">
+    <button type="submit" [disabled]="loading">
       {{ loading ? 'Registrazione...' : 'Registrati' }}
     </button>
   </form>
 
-  <!-- Messaggio errore -->
-  <p *ngIf="error" style="color:red;">{{ error }}</p>
+  <!-- Messaggio errore generale -->
+  <p class="error-general" *ngIf="errorMessage">{{ errorMessage }}</p>
 </div>

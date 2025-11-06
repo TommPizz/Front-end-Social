@@ -270,10 +270,52 @@ body, html {
   z-index: 1;
 }
 
+/* Gruppo form con errore */
+/* Gruppo form con margine */
+.form-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+
+
+/* Input con errore (bordo rosso) */
+.input-error {
+  border-color: #ef4444 !important;
+  background: rgba(254, 242, 242, 0.3) !important;
+}
+
+/* Messaggio errore sotto input */
+.error-message {
+  display: block;
+  color: #dc2626;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  font-weight: 600;
+  animation: slideDown 0.3s ease;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Errore generale in alto */
+.error-general {
+  padding: 1rem;
+  border-radius: 12px;
+  margin-top: 1.5rem;
+  text-align: center;
+  font-weight: 500;
+  background: rgba(254, 242, 242, 0.95);
+  color: #dc2626;
+  border: 1.5px solid rgba(254, 202, 202, 0.6);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+  max-width: 440px;
+  animation: slideDown 0.3s ease;
+}
+
 @keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-5px);
   }
   to {
     opacity: 1;
