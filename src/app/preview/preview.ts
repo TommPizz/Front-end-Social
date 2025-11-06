@@ -13,15 +13,11 @@ import { CardModule } from 'primeng/card';
 })
 export class Preview {
   features = [
-    {
-      icon: 'pi pi-comments',
-      title: 'Discussioni Accademiche',
-      description: 'Partecipa a conversazioni costruttive su temi di studio e ricerca'
-    },
+
     {
       icon: 'pi pi-users',
       title: 'Networking Studentesco',
-      description: 'Connettiti con studenti del tuo corso o di altre università'
+      description: 'Connettiti con studenti del tuo corso o di altri ITS'
     },
     {
       icon: 'pi pi-share-alt',
@@ -31,7 +27,7 @@ export class Preview {
     {
       icon: 'pi pi-book',
       title: 'Supporto allo Studio',
-      description: 'Trova aiuto per esami, progetti e dubbi accademici'
+      description: 'Trova aiuto per esami e progetti '
     }
   ];
 

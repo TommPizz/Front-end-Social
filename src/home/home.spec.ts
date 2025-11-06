@@ -1,23 +1,49 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HomeComponent } from './home';
+import { AuthService } from '../app/services/auth';
+import { PostService } from '../app/services/post-service';
+import { Router } from 'express';
+import { of } from 'rxjs';
 
-import { Home } from './home';
+// Mock molto semplice
+class MockAuthService {
+  logout() {}
+}
 
-describe('Home', () => {
-  let component: Home;
-  let fixture: ComponentFixture<Home>;
+class MockPostService {
+  getAllPosts() {
+    return of([]);
+  }
+}
+
+class MockRouter {
+  navigate() {}
+}
+
+describe('HomeComponent', () => {
+  let component: HomeComponent;
+  let fixture: ComponentFixture<HomeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Home]
-    })
-    .compileComponents();
+      declarations: [HomeComponent],
+      providers: [
+        { provide: AuthService, useClass: MockAuthService },
+        { provide: PostService, useClass: MockPostService },
+        { provide: Router, useClass: MockRouter }
+      ]
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(Home);
+    fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should initialize with loading state', () => {
+    expect(component.isLoading).toBeTrue();
+    expect(component.posts).toEqual([]);
   });
 });

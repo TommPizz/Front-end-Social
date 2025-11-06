@@ -5,6 +5,7 @@ import { Observable, tap } from 'rxjs';
 
 import { isPlatformBrowser } from '@angular/common';
 import { jwtDecode } from 'jwt-decode';
+import { RegistrazioneRequest } from '../dto/RegistrazioneRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,11 @@ export class AuthService {
   private platformId = inject(PLATFORM_ID);
 
   constructor(private http: HttpClient, private router: Router) {}
+
+  register(request: RegistrazioneRequest): Observable<void> {
+  return this.http.post<void>(`${this.apiUrl}/registrazione`, request);
+}
+
 
   login(credentials: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(

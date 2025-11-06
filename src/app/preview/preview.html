@@ -4,17 +4,16 @@
     <div class="header-content">
 <!-- Test: mostra testo se logo non carica -->
 <div class="logo-container">
-  <img src="../../assets/logo.png" 
+  <img src="images/logo-itsocial.png" 
        alt="Logo" 
        class="logo"
        onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
-  <span style="display:none; font-size: 1.5rem; font-weight: bold; color: #4F46E5;">
-    ITSocial
-  </span>
 </div>
+
+      <h1 class="titolo">IL SOCIAL DEGLI ITS</h1>
       <button pButton 
+              
               label="Accedi" 
-              icon="pi pi-sign-in" 
               class="p-button-outlined p-button-rounded header-button"
               (click)="goToLogin()">
       </button>
@@ -25,18 +24,19 @@
   <section class="hero">
     <div class="hero-content">
       <h1 class="hero-title">
-        Piattaforma di Networking<br>
-        <span class="accent-text">per Studenti Universitari</span>
+        Benvenuto in ITSocial!<br>
+        <span class="accent-text">per Studenti ITS</span>
       </h1>
       <p class="hero-subtitle">
-        Una community professionale dedicata agli studenti che vogliono 
-        confrontarsi, collaborare e crescere insieme nel loro percorso accademico.
+         Qui gli studenti degli ITS di tutta Italia si incontrano, si scambiano idee, si aiutano e si divertono.<br>
+          -Connettiti con chi sta seguendo il tuo stesso percorso<br>
+          -Trova spunti, consigli e gruppi studio<br>
+        È più di un social: è la community che ti accompagna durante il tuo percorso e ti prepara al futuro. Unisciti e fai sentire la tua voce!
       </p>
       <div class="hero-actions">
         <button pButton 
-                label="Inizia Ora" 
-                icon="pi pi-arrow-right" 
-                iconPos="right"
+                label="Scopri il social" 
+                
                 class="p-button-lg p-button-raised"
                 (click)="goToLogin()">
         </button>
@@ -45,9 +45,34 @@
     
     <div class="hero-image">
       <div class="image-placeholder">
-        <i class="pi pi-graduation-cap placeholder-icon"></i>
+        <img src="images/grafica.png" class="placeholder-icon">
       </div>
     </div>
+  </section>
+
+  <section class="hero">
+    <div class="hero-image">
+      <div class="image-placeholder">
+        <img src="images/smartina.png" class="placeholder-icon">
+      </div>
+    </div>
+    <div class="hero-content">
+      <h1 class="hero-title">
+        Ciao Sono SmarTina!<br>
+        <span class="accent-text">la tua assistente digitale ITS</span>
+      </h1>
+      <p class="hero-subtitle">
+        Ti racconto tutto sui corsi ITS e su come muoverti nel social. Sempre aggiornata, sempre con te! <br>
+         Chiedimi pure:<br>
+          -Info sui corsi<br>
+          -Scadenze<br>
+          -Supporto veloce<br>
+
+        Trasformerò i tuoi dubbi in risposte immediate
+      </p>
+  
+    </div>
+    
   </section>
 
   <!-- Features Section -->
@@ -55,7 +80,7 @@
     <div class="section-header">
       <h2 class="section-title">Funzionalità Principali</h2>
       <p class="section-subtitle">
-        Tutto ciò che ti serve per migliorare la tua esperienza universitaria
+        Tutto ciò che ti serve per migliorare la tua esperienza di studio 
       </p>
     </div>
     
@@ -75,44 +100,7 @@
       </p-card>
     </div>
   </section>
-
-  <!-- Benefits Section -->
-  <section class="benefits">
-    <div class="benefits-content">
-      <div class="benefits-text">
-        <h2 class="benefits-title">Una Community Seria e Professionale</h2>
-        <div class="benefits-list">
-          <div class="benefit-item">
-            <i class="pi pi-check-circle benefit-icon"></i>
-            <div>
-              <h4>Ambiente Rispettoso</h4>
-              <p>Una piattaforma moderata dove il rispetto reciproco è fondamentale</p>
-            </div>
-          </div>
-          <div class="benefit-item">
-            <i class="pi pi-check-circle benefit-icon"></i>
-            <div>
-              <h4>Focus Accademico</h4>
-              <p>Contenuti orientati allo studio e alla crescita professionale</p>
-            </div>
-          </div>
-          <div class="benefit-item">
-            <i class="pi pi-check-circle benefit-icon"></i>
-            <div>
-              <h4>Connessioni Autentiche</h4>
-              <p>Costruisci relazioni significative con colleghi e compagni di studio</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="benefits-visual">
-        <div class="visual-card">
-          <i class="pi pi-chart-line visual-icon"></i>
-          <h4>Crescita Collaborativa</h4>
-        </div>
-      </div>
-    </div>
-  </section>
+  
 
   <!-- CTA Final -->
   <section class="cta-section">
@@ -126,8 +114,7 @@
           </p>
           <button pButton 
                   label="Accedi alla Piattaforma" 
-                  icon="pi pi-arrow-right" 
-                  iconPos="right"
+                  
                   class="p-button-lg p-button-raised"
                   (click)="goToLogin()">
           </button>
@@ -139,7 +126,7 @@
   <!-- Footer -->
   <footer class="footer">
     <div class="footer-content">
-      <p>&copy; 2024 Student Community Platform. Tutti i diritti riservati.</p>
+      <p>&copy; 2025 ITSocial. Tutti i diritti riservati.</p>
     </div>
   </footer>
 </div>

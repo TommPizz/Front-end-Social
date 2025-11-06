@@ -28,12 +28,12 @@ export class LoginComponent implements OnInit {
     });
   }
 
-ngOnInit(): void {
-  // Se esiste già un token valido, vai direttamente in home
-  if (this.authService.isAuthenticated()) {
-    this.router.navigate(['/home']);
+  ngOnInit(): void {
+    // Se esiste già un token valido, vai direttamente in home
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/home']);
+    }
   }
-}
 
   onSubmit(): void {
     if (this.loginForm.valid) {
@@ -57,5 +57,13 @@ ngOnInit(): void {
     } else {
       this.errorMessage = 'Compila tutti i campi obbligatori';
     }
+  }
+
+  goToPreview(): void {
+    this.router.navigate(['/preview']);
+  }
+
+  goToRegistration(): void {
+    this.router.navigate(['/registrazione']);
   }
 }

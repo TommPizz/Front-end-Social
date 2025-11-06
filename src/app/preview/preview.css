@@ -6,7 +6,7 @@
 
 .preview-container {
   min-height: 100vh;
-  background: #f8f9fa;
+  background: #ffffff;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
@@ -19,6 +19,7 @@
   top: 0;
   z-index: 1000;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  height: 150px;
 }
 
 .header-content {
@@ -32,24 +33,50 @@
 .logo-container {
   display: flex;
   align-items: center;
+  
 }
 
 .logo {
-  height: 45px;
+  height: 130px;
   width: auto;
 }
 
+.titolo {
+  font-family: "Poppins", "Montserrat", "Segoe UI", sans-serif;
+  font-weight: 800;
+  font-size: 3rem;
+  text-transform: uppercase;
+  color: #28bed9;
+  text-align: center;
+  letter-spacing: 2px;
+  
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
 .header-button {
   background: transparent !important;
-  border: 2px solid #4F46E5 !important;
-  color: #4F46E5 !important;
+  border: 2px solid #28bed9  !important;
+  color: #28bed9 !important;
   font-weight: 600 !important;
   padding: 0.75rem 1.75rem !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
+
+
 .header-button:hover {
-  background: #4F46E5 !important;
+  background: #28bed9  !important;
   color: white !important;
   transform: translateY(-2px) !important;
   box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3) !important;
@@ -67,7 +94,7 @@
 }
 
 .hero-content {
-  color: #1e293b;
+  color: #ffffff;
 }
 
 .hero-title {
@@ -79,11 +106,11 @@
 }
 
 .accent-text {
-  color: #4F46E5;
+  color: #01A4F4;
 }
 
 .hero-subtitle {
-  font-size: 1.125rem;
+  font-size: 1.3rem;
   line-height: 1.7;
   color: #475569;
   margin-bottom: 2.5rem;
@@ -95,19 +122,18 @@
 }
 
 .hero-actions button {
-  background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%) !important;
+  background: linear-gradient(135deg, #46e553 0%, #7C3AED 100%) !important;
   border: none !important;
   padding: 0.875rem 2.5rem !important;
   font-weight: 600 !important;
   font-size: 1.05rem !important;
-  box-shadow: 0 10px 30px rgba(79, 70, 229, 0.4) !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .hero-actions button:hover {
-  background: linear-gradient(135deg, #4338CA 0%, #6D28D9 100%) !important;
+  background: linear-gradient(135deg, #38ca92 0%, #28bed9 100%) !important;
   transform: translateY(-3px) !important;
-  box-shadow: 0 15px 40px rgba(79, 70, 229, 0.5) !important;
+  
 }
 
 /* Hero Image */
@@ -120,18 +146,12 @@
 .image-placeholder {
   width: 400px;
   height: 400px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 20px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  
 }
 
 .placeholder-icon {
-  font-size: 8rem;
-  color: white;
-  opacity: 0.9;
+ width: 100%;
 }
 
 /* Features Section */
@@ -139,9 +159,13 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 5rem 5%;
-  background: #f8f9fa;
+  border: 5px solid #28bed9;
+  border-radius: 30px;
+  background: #ffffff;
+  box-shadow: 0 10px 25px rgba(0, 198, 255, 0.25),
+              0 6px 15px rgba(40, 190, 217, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
 .section-header {
   text-align: center;
   margin-bottom: 3.5rem;
@@ -150,7 +174,7 @@
 .section-title {
   font-size: 2.25rem;
   font-weight: 700;
-  color: #0f172a;
+  color: #01A4F4;
   margin-bottom: 1rem;
 }
 
@@ -170,6 +194,7 @@
 .feature-card {
   height: 100%;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 2px solid orange;
 }
 
 .feature-card:hover {
@@ -184,7 +209,7 @@
 
 .feature-icon {
   font-size: 3rem;
-  color: #4F46E5;
+  color: #01A4F4;
 }
 
 .feature-title {
@@ -199,65 +224,6 @@
   color: #64748b;
   line-height: 1.6;
   text-align: center;
-}
-
-/* Benefits Section */
-.benefits {
-  background: white;
-  padding: 5rem 5%;
-}
-
-.benefits-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  align-items: center;
-}
-
-.benefits-title {
-  font-size: 2.25rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 2rem;
-  line-height: 1.3;
-}
-
-.benefits-list {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.benefit-item {
-  display: flex;
-  gap: 1rem;
-  align-items: flex-start;
-}
-
-.benefit-icon {
-  font-size: 1.5rem;
-  color: #10b981;
-  flex-shrink: 0;
-  margin-top: 0.25rem;
-}
-
-.benefit-item h4 {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #0f172a;
-  margin-bottom: 0.5rem;
-}
-
-.benefit-item p {
-  color: #64748b;
-  line-height: 1.6;
-}
-
-.benefits-visual {
-  display: flex;
-  justify-content: center;
 }
 
 .visual-card {
@@ -285,126 +251,397 @@
   max-width: 900px;
   margin: 0 auto;
   padding: 5rem 5%;
+  text-align: center;
 }
 
 .cta-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: none;
+  background: none;
+  box-shadow: none !important;
 }
 
 .cta-content {
   text-align: center;
-  padding: 2rem;
-  color: white;
+  padding: 0;
 }
 
 .cta-title {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+  color: #01A4F4;
 }
 
 .cta-text {
-  font-size: 1.125rem;
-  line-height: 1.7;
-  margin-bottom: 2rem;
-  opacity: 0.95;
+  font-size: 1.25rem;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+  color: #4a5568;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .cta-content button {
   background: white !important;
-  color: #4F46E5 !important;
-  border: none !important;
-  padding: 0.875rem 2.5rem !important;
-  font-weight: 600 !important;
-  font-size: 1.05rem !important;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  color: orange !important;
+  padding: 1rem 3rem !important;
+  font-weight: 700 !important;
+  font-size: 1.1rem !important;
+  border: 2px solid orange !important;
+  border-radius: 30px !important;
+  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  cursor: pointer;
 }
 
 .cta-content button:hover {
-  background: #f8f9fa !important;
-  transform: translateY(-3px) !important;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25) !important;
+  transform: translateY(-5px) scale(1.05) !important;
+  box-shadow: 0 15px 40px rgba(255, 255, 255, 0.4) !important;
+}
+
+.cta-content button:active {
+  transform: translateY(-2px) scale(1.02) !important;
 }
 
 /* Footer */
 .footer {
-  background: #0f172a;
+  width: 100%;
+  background: linear-gradient(90deg, #38ca92 0%, #28bed9 100%);
   padding: 2rem 5%;
-  margin-top: 5rem;
+  margin: 0; /* rimuove i margini esterni */
+  box-sizing: border-box;
+  color: white;
+  text-align: center;
 }
 
 .footer-content {
   max-width: 1200px;
   margin: 0 auto;
   text-align: center;
-  color: #94a3b8;
+  color: #ffffff;
 }
 
 /* Responsive */
-@media (max-width: 968px) {
+@media (max-width: 1024px) {
   .hero,
   .benefits-content {
     grid-template-columns: 1fr;
     gap: 3rem;
   }
 
+  .hero {
+    padding: 3rem 5% 3rem;
+  }
+
   .hero-title {
-    font-size: 2.25rem;
+    font-size: 2.5rem;
   }
 
-  .section-title {
-    font-size: 1.875rem;
+  .features {
+    padding: 4rem 5%;
   }
 
-  .benefits-title {
-    font-size: 1.875rem;
+  .benefits {
+    padding: 4rem 5%;
   }
 
-  .image-placeholder {
-    width: 100%;
-    max-width: 350px;
-    height: 350px;
+  .cta-section {
+    padding: 4rem 5%;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    height: auto;
+    padding: 1rem 5%;
   }
 
   .header-content {
     flex-direction: column;
     gap: 1rem;
   }
+
+  .logo {
+    height: 80px;
+  }
+
+  .header-button {
+    padding: 0.625rem 1.5rem !important;
+    font-size: 0.95rem !important;
+  }
+
+  .hero {
+    padding: 2.5rem 5% 2.5rem;
+    gap: 2rem;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .hero-actions button {
+    width: 100%;
+    padding: 0.75rem 2rem !important;
+    font-size: 1rem !important;
+  }
+
+  .image-placeholder {
+    width: 100%;
+    max-width: 320px;
+    height: 320px;
+  }
+
+  .section-title {
+    font-size: 1.875rem;
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
+  }
+
+  .features {
+    padding: 3rem 5%;
+  }
+
+  .section-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .features-grid {
+    gap: 1.5rem;
+  }
+
+  .benefits {
+    padding: 3rem 5%;
+  }
+
+  .benefits-title {
+    font-size: 1.875rem;
+  }
+
+  .benefits-content {
+    gap: 2.5rem;
+  }
+
+  .benefits-list {
+    gap: 1.5rem;
+  }
+
+  .visual-card {
+    padding: 2rem;
+    min-width: 280px;
+  }
+
+  .cta-section {
+    padding: 3rem 5%;
+  }
+
+  .cta-title {
+    font-size: 1.75rem;
+  }
+
+  .cta-text {
+    font-size: 1rem;
+  }
+
+  .cta-content button {
+    padding: 0.75rem 2rem !important;
+    font-size: 1rem !important;
+  }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 480px) {
+  .header {
+    padding: 0.875rem 4%;
+  }
+
+  .logo {
+    height: 60px;
+  }
+
+  .header-button {
+    padding: 0.5rem 1.25rem !important;
+    font-size: 0.9rem !important;
+  }
+
+  .hero {
+    padding: 2rem 4% 2rem;
+    gap: 1.5rem;
+  }
+
   .hero-title {
-    font-size: 1.875rem;
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
   }
 
   .hero-subtitle {
     font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-actions button {
+    padding: 0.675rem 1.75rem !important;
+    font-size: 0.95rem !important;
+  }
+
+  .image-placeholder {
+    max-width: 280px;
+    height: 280px;
+  }
+
+  .features {
+    padding: 2.5rem 4%;
+  }
+
+  .section-title {
+    font-size: 1.625rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .section-header {
+    margin-bottom: 2rem;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .feature-icon-container {
+    padding: 1.5rem 1.5rem 0;
+  }
+
+  .feature-icon {
+    font-size: 2.5rem;
+  }
+
+  .feature-title {
+    font-size: 1.125rem;
+  }
+
+  .feature-description {
+    font-size: 0.95rem;
+  }
+
+  .benefits {
+    padding: 2.5rem 4%;
+  }
+
+  .benefits-title {
+    font-size: 1.625rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .benefits-content {
+    gap: 2rem;
+  }
+
+  .benefits-list {
+    gap: 1.25rem;
+  }
+
+  .benefit-icon {
+    font-size: 1.25rem;
+  }
+
+  .benefit-item h4 {
+    font-size: 1rem;
+  }
+
+  .benefit-item p {
+    font-size: 0.95rem;
+  }
+
+  .visual-card {
+    padding: 1.75rem;
+    min-width: 260px;
+  }
+
+  .visual-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .visual-card h4 {
+    font-size: 1.25rem;
+  }
+
+  .cta-section {
+    padding: 2.5rem 4%;
+  }
+
+  .cta-content {
+    padding: 1.5rem;
+  }
+
+  .cta-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.875rem;
+  }
+
+  .cta-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-content button {
+    width: 100%;
+    padding: 0.675rem 1.75rem !important;
+    font-size: 0.95rem !important;
+  }
+
+  .footer {
+    padding: 1.5rem 4%;
+    margin-top: 3rem;
+  }
+
+  .footer-content {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-title {
+    font-size: 1.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.9rem;
   }
 
   .section-title {
     font-size: 1.5rem;
   }
 
-  .benefits-title {
-    font-size: 1.5rem;
-  }
-
-  .cta-title {
-    font-size: 1.5rem;
-  }
-
-  .features-grid {
-    grid-template-columns: 1fr;
-  }
-
   .image-placeholder {
-    height: 280px;
+    max-width: 240px;
+    height: 240px;
   }
 
-  .placeholder-icon {
-    font-size: 5rem;
+  .feature-icon {
+    font-size: 2rem;
+  }
+
+  .visual-card {
+    padding: 1.5rem;
+    min-width: 240px;
   }
 }
 
