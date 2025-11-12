@@ -5,7 +5,8 @@ import { Observable, tap } from 'rxjs';
 
 import { isPlatformBrowser } from '@angular/common';
 import { jwtDecode } from 'jwt-decode';
-import { RegistrazioneRequest } from '../dto/RegistrazioneRequest';
+import { RegistrazioneRequest } from '../components/dto/RegistrazioneRequest';
+
 
 @Injectable({
   providedIn: 'root'

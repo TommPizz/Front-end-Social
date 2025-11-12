@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { PostDto } from '../app/dto/PostDto';
-import { AuthService } from '../app/services/auth';
-import { PostService } from '../app/services/post-service';
+
+import { AuthService } from '../../services/auth';
+import { PostService } from '../../services/post-service';
+import { PostDto } from '../dto/PostDto';
 
 @Component({
   selector: 'app-home',

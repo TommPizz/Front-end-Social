@@ -69,17 +69,15 @@
 
     <!-- Campo Codice Fiscale -->
     <div class="form-group">
-      <label>Codice Fiscale</label>
+      <label>Email</label>
       <input 
-        formControlName="codiceFiscale" 
+        formControlName="email" 
         type="text" 
-        placeholder="16 caratteri (es. RSSMRA80A01H501U)"
-        maxlength="16"
-        [class.input-error]="getErrore('codiceFiscale')"
-        style="text-transform: uppercase;" />
+
+        [class.input-error]="getErrore('email')"/>
       <!-- 👇 QUESTO MOSTRA L'ERRORE -->
-      <span class="error-message" *ngIf="getErrore('codiceFiscale')">
-        {{ getErrore('codiceFiscale') }}
+      <span class="error-message" *ngIf="getErrore('email')">
+        {{ getErrore('email') }}
       </span>
     </div>
 

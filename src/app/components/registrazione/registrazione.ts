@@ -2,8 +2,9 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth';
+
 import { RegistrazioneRequest } from '../dto/RegistrazioneRequest';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-registrazione',
@@ -31,7 +32,7 @@ export class Registrazione implements OnInit {
       cognome: ['', Validators.required],
       username: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(8)]],
-      codiceFiscale: ['', [Validators.required, Validators.minLength(16), Validators.maxLength(16)]]
+      email: ['', [Validators.required, Validators.email]]
     });
   }
 
@@ -81,14 +82,6 @@ export class Registrazione implements OnInit {
     if (control && control.invalid && control.touched) {
       if (control.errors?.['required']) {
         return 'Questo campo è obbligatorio';
-      }
-      if (control.errors?.['minlength']) {
-        const min = control.errors['minlength'].requiredLength;
-        return `Minimo ${min} caratteri`;
-      }
-      if (control.errors?.['maxlength']) {
-        const max = control.errors['maxlength'].requiredLength;
-        return `Massimo ${max} caratteri`;
       }
     }
     

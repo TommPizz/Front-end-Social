@@ -2,8 +2,9 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PostDto } from '../dto/PostDto';
-import { PostService } from '../services/post-service';
+
 import { CommonModule } from '@angular/common';
+import { PostService } from '../../services/post-service';
 
 @Component({
   selector: 'app-create-post',

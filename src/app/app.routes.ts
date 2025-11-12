@@ -1,10 +1,16 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './login/login';
-import { HomeComponent } from '../home/home';
+
+import { HomeComponent } from './components/home/home';
 import { AuthGuard } from './guards/guards-guard';
-import { Preview } from './preview/preview';
-import { CreatePostComponent } from './crea-post/crea-post';
-import { Registrazione } from './registrazione/registrazione';
+import { LoginComponent } from './components/login/login';
+import { Registrazione } from './components/registrazione/registrazione';
+import { Preview } from './components/preview/preview';
+import { CreatePostComponent } from './components/crea-post/crea-post';
+import { PasswordResetRequestComponent } from './components/password-reset-request/password-reset-request';
+import { VerificaCodiceComponent } from './components/verifica-codice/verifica-codice';
+import { NuovaPasswordComponent } from './components/nuova-password-component/nuova-password-component';
+
+
 
 export const routes: Routes = [
   {
@@ -28,6 +34,21 @@ export const routes: Routes = [
     component: HomeComponent,
     canActivate: [AuthGuard]
   },
+  {
+    path: 'recupera-password',
+    component: PasswordResetRequestComponent
+  },
+
+    {
+    path: 'verifica-codice',
+    component: VerificaCodiceComponent
+  },
+
+    {
+    path: 'nuova-password',
+    component: NuovaPasswordComponent
+  },
+  
   {
     path: '**',
     redirectTo: 'preview'

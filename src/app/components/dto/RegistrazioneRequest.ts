@@ -3,5 +3,5 @@ export interface RegistrazioneRequest {
   password: string;
   nome: string;
   cognome: string;
-  codiceFiscale: string;
+  email: string;
 }

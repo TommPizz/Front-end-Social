@@ -1,9 +1,9 @@
 import { Component, OnInit, inject, PLATFORM_ID } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { tap } from 'rxjs';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-login',
@@ -66,4 +66,7 @@ export class LoginComponent implements OnInit {
   goToRegistration(): void {
     this.router.navigate(['/registrazione']);
   }
+  goToPasswordReset(): void {
+  this.router.navigate(['/recupera-password']);
+}
 }
