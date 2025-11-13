@@ -5,8 +5,9 @@ export interface PostDto {
   id: number;
   idUtente: number;
   nomeUtente: string;
-  dataOra: string; // LocalDateTime viene mappato come string in ISO format
+  dataOra: string; // LocalDateTime mappato come string ISO
   contenuto: string;
-  commenti: CommentoDto[];
-  like: LikeDto[];
+  commenti?: CommentoDto[]; // Opzionale
+  like?: LikeDto[]; // Opzionale
+  numeroLike?: number; // Opzionale
 }

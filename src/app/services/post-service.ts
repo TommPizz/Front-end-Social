@@ -2,57 +2,48 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PostDto } from '../components/dto/PostDto';
-import { PostFormDto } from '../components/dto/PostFormDto';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
-  // USA /api/post (SINGOLARE) come nel backend
   private apiUrl = 'http://localhost:8080/api/post';
 
-  constructor(private http: HttpClient) {
-    console.log('🔧 PostService inizializzato con URL:', this.apiUrl);
-  }
+  constructor(private http: HttpClient) {}
 
-  /**
-   * Crea un nuovo post (con auth)
-   */
-  createPost(postForm: PostFormDto): Observable<PostDto> {
-    console.log('📝 Creazione post con dati:', postForm);
-    const headers = this.getAuthHeaders();
-    return this.http.post<PostDto>(this.apiUrl, postForm, { headers });
-  }
-
-  /**
-   * Recupera tutti i post (SENZA auth per testare)
-   */
+  // Ottiene tutti i post
   getAllPosts(): Observable<PostDto[]> {
-
-    
-    // Se funziona, poi prova CON headers:
-    const headers = this.getAuthHeaders();
-    return this.http.get<PostDto[]>(this.apiUrl, { headers });
+    return this.http.get<PostDto[]>(this.apiUrl);
   }
 
-  /**
-   * Ottiene gli headers con il token JWT
-   */
-  private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
-    console.log('🔐 Token in localStorage:', token ? 'PRESENTE' : 'ASSENTE');
-    
-    if (token) {
-      return new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      });
-    } else {
-      console.warn('⚠️ Nessun token trovato in localStorage');
-      return new HttpHeaders({
-        'Content-Type': 'application/json'
-      });
-    }
+  // Ottiene post per ID
+  getPostById(id: number): Observable<PostDto> {
+    return this.http.get<PostDto>(`${this.apiUrl}/${id}`);
+  }
+
+  // Ottiene tutti i post di un utente
+  getAllPostsByUtente(idUtente: number): Observable<PostDto[]> {
+    return this.http.get<PostDto[]>(`${this.apiUrl}/all/${idUtente}`);
+  }
+
+  // Ottiene i post in tendenza
+  getTendenze(limit: number = 10): Observable<PostDto[]> {
+    return this.http.get<PostDto[]>(`${this.apiUrl}/tendenze?limit=${limit}`);
+  }
+
+  // Crea un nuovo post
+  createPost(contenuto: string): Observable<PostDto> {
+    return this.http.post<PostDto>(this.apiUrl, { contenuto });
+  }
+
+  // Aggiorna un post
+  updatePost(id: number, contenuto: string): Observable<PostDto> {
+    return this.http.put<PostDto>(this.apiUrl, { id, contenuto });
+  }
+
+  // Elimina un post
+  deletePost(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/elimina/${id}`);
   }
 }

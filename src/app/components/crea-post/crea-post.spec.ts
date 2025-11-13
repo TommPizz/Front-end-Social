@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CreatePostComponent } from './crea-post';
-import { PostService } from '../services/post-service';
+import { PostService } from '../../services/post-service';
+
 
 describe('CreatePostComponent', () => {
   let component: CreatePostComponent;

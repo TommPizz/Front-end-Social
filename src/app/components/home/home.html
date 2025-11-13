@@ -1,82 +1,71 @@
 <div class="home-container">
-  <!-- Header -->
-  <div class="header">
-    <h1>Benvenuto!</h1>
+  <div class="top-bar">
     <button class="logout-btn" (click)="logout()">Logout</button>
   </div>
+  <h1>Feed dei Post</h1>
 
-  <!-- Pulsante Crea Post -->
-  <div class="action-buttons">
-    <button class="btn btn-primary" (click)="navigateToCreatePost()">
-      <i class="fas fa-plus"></i> Crea Nuovo Post
-    </button>
-  </div>
 
-  <!-- DEBUG: Aggiungi questo per vedere se i dati arrivano -->
-  <div *ngIf="false" class="debug-info" style="background: yellow; padding: 10px; margin: 10px 0;">
-    DEBUG: isLoading = {{ isLoading }}, posts.length = {{ posts.length }}, errorMessage = "{{ errorMessage }}"
-  </div>
+  <!-- Loading spinner -->
+  @if (loading()) {
+    <div class="loading">
+      <p>Caricamento post in corso...</p>
+    </div>
+  }
 
-  <!-- Loading -->
-  <div *ngIf="isLoading" class="loading-container">
-    <div class="spinner"></div>
-    <p>Caricamento post...</p>
-  </div>
-
-  <!-- Errore -->
-  <div *ngIf="errorMessage && !isLoading" class="error-container">
+  <!-- Messaggio di errore -->
+  @if (error() && error().length > 0) {
     <div class="error-message">
-      {{ errorMessage }}
+      {{ error() }}
+      <button (click)="loadPosts()">Riprova</button>
     </div>
-    <button class="btn-retry" (click)="loadAllPosts()">Riprova</button>
-  </div>
+  }
 
-  <!-- Nessun post -->
-  <div *ngIf="!isLoading && !errorMessage && posts.length === 0" class="no-posts">
-    <div class="no-posts-icon">📝</div>
-    <h3>Ancora nessun post</h3>
-    <p>Sii il primo a condividere qualcosa!</p>
-  </div>
-
-  <!-- Lista post -->
-  <div *ngIf="!isLoading && posts.length > 0" class="posts-container">
-    <div class="posts-count">
-      {{ posts.length }} post{{ posts.length !== 1 ? 's' : '' }} nella community
-    </div>
-    
+  <!-- Lista dei post -->
+  @if (!loading() && !error()) {
     <div class="posts-list">
-      <div *ngFor="let post of posts; let i = index" class="post-card">
-        <!-- Header post -->
-        <div class="post-header">
-          <div class="user-info">
-            <span class="user-avatar">👤</span>
-            <span class="user-name">{{ post.nomeUtente || 'Utente' }}</span>
+      @if (posts().length === 0) {
+        <div class="no-posts">
+          <p>Nessun post disponibile</p>
+        </div>
+      }
+
+      @for (post of posts(); track post.id) {
+        <div class="post-card">
+          <div class="post-header">
+            <div class="user-info">
+              <span class="username">{{ post.nomeUtente }}</span>
+              <span class="date">{{ formatDate(post.dataOra) }}</span>
+            </div>
           </div>
-          <span class="post-date">
-            {{ post.dataOra | date:'dd/MM/yyyy HH:mm' }}
-          </span>
-        </div>
 
-        <!-- Contenuto post -->
-        <div class="post-content">
-          {{ post.contenuto }}
-        </div>
+          <div class="post-content">
+            <p>{{ post.contenuto }}</p>
+          </div>
 
-        <!-- Statistiche post -->
-        <div class="post-stats">
-          <span class="stat-item">
-            ❤️ {{ post.like?.length || 0 }}
-          </span>
-          <span class="stat-item">
-            💬 {{ post.commenti?.length || 0 }}
-          </span>
-        </div>
+          <div class="post-footer">
+            <div class="likes">
+              <span class="like-icon">❤️</span>
+              <span class="like-count">{{ post.numeroLike || post.like?.length || 0 }}</span>
+            </div>
+            <div class="comments">
+              <span class="comment-icon">💬</span>
+              <span class="comment-count">{{ post.commenti?.length || 0 }}</span>
+            </div>
+          </div>
 
-        <!-- Debug per ogni post -->
-        <div *ngIf="false" style="font-size: 10px; color: gray;">
-          Post {{ i }}: ID={{ post.id }}, User={{ post.nomeUtente }}
+          <!-- Sezione commenti (opzionale) -->
+          @if (post.commenti && post.commenti.length > 0) {
+            <div class="comments-section">
+              <h4>Commenti:</h4>
+              @for (commento of post.commenti; track commento.idCommento) {
+                <div class="comment">
+                  <strong>{{ commento.utente?.username || 'Utente' }}</strong>: {{ commento.testo }}
+                </div>
+              }
+            </div>
+          }
         </div>
-      </div>
+      }
     </div>
-  </div>
+  }
 </div>
