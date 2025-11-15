@@ -17,12 +17,12 @@
   padding: 8px 15px;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .logout-btn:hover {
   background-color: #c0392b;
 }
-
 
 h1 {
   text-align: center;
@@ -132,16 +132,122 @@ h1 {
 .likes, .comments {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
   color: #666;
 }
 
-.like-icon, .comment-icon {
-  font-size: 18px;
+/* ⭐ STILI PER IL PULSANTE LIKE CON STELLA ⭐ */
+.like-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+  outline: none;
 }
+
+.like-btn:hover:not(:disabled) {
+  transform: scale(1.15);
+}
+
+.like-btn:active:not(:disabled) {
+  transform: scale(0.9);
+}
+
+.like-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Stella SVG */
+.star-icon {
+  width: 22px;
+  height: 22px;
+  fill: white;
+  stroke: #ffd700;
+  stroke-width: 2;
+  transition: all 0.3s ease;
+}
+
+/* Stella quando è attiva (liked) */
+.like-btn.liked .star-icon {
+  fill: #ffd700;
+  stroke: #ffa500;
+  animation: star-pop 0.5s ease;
+}
+
+/* Animazione quando si clicca sulla stella */
+@keyframes star-pop {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  30% {
+    transform: scale(1.4) rotate(-15deg);
+  }
+  60% {
+    transform: scale(1.2) rotate(15deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* Animazione al hover */
+.like-btn:hover:not(:disabled) .star-icon {
+  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5));
+  transform: rotate(-10deg);
+}
+
+/* Effetto quando il like è attivo e si passa sopra */
+.like-btn.liked:hover:not(:disabled) .star-icon {
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
+  transform: rotate(10deg) scale(1.05);
+}
+
+/* Animazione pulsante quando è premuto */
+.like-btn.liked {
+  animation: pulse 0.5s ease;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Stato di loading */
+.like-btn.loading .star-icon {
+  animation: rotate 1s linear infinite;
+  opacity: 0.5;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Fine stili like */
 
 .like-count, .comment-count {
   font-weight: 500;
+  font-size: 14px;
+  color: #333;
+  min-width: 20px;
+  text-align: left;
+}
+
+.comment-icon {
+  font-size: 18px;
 }
 
 .comments-section {
@@ -176,5 +282,14 @@ h1 {
   
   .post-card {
     padding: 15px;
+  }
+
+  .star-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .like-count, .comment-count {
+    font-size: 13px;
   }
 }
