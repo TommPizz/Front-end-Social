@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PostDto } from '../components/dto/PostDto';
+import { PostFormDto } from '../components/dto/PostFormDto';
 
 
 @Injectable({
@@ -33,8 +34,8 @@ export class PostService {
   }
 
   // Crea un nuovo post
-  createPost(contenuto: string): Observable<PostDto> {
-    return this.http.post<PostDto>(this.apiUrl, { contenuto });
+  createPost(postForm: PostFormDto): Observable<PostDto> {
+    return this.http.post<PostDto>(this.apiUrl, postForm);
   }
 
   // Aggiorna un post

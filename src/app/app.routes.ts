@@ -27,7 +27,8 @@ export const routes: Routes = [
   },
 
   { path: 'crea-post', 
-    component: CreatePostComponent },
+    component: CreatePostComponent,
+    canActivate: [AuthGuard] },
 
   {
     path: 'home',

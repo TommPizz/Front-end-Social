@@ -1,19 +1,17 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { PostDto } from '../dto/PostDto';
-
 import { CommonModule } from '@angular/common';
 import { PostService } from '../../services/post-service';
 
 @Component({
   selector: 'app-create-post',
-  standalone: true, // <-- Componente standalone
-  imports: [CommonModule, ReactiveFormsModule], // <-- Importa ReactiveFormsModule qui
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './crea-post.html',
   styleUrls: ['./crea-post.css']
 })
-export class CreatePostComponent {
+export class CreatePostComponent { // ⬅️ DEVE AVERE 'export class'
   postForm: FormGroup;
   isSubmitting = false;
   errorMessage = '';
@@ -21,13 +19,13 @@ export class CreatePostComponent {
   characterCount = 0;
   maxCharacters = 1000;
 
-  @Output() postCreated = new EventEmitter<PostDto>();
-
   constructor(
     private fb: FormBuilder,
     private postService: PostService,
     private router: Router
   ) {
+    console.log('✅ CreatePostComponent costruito');
+    
     this.postForm = this.fb.group({
       contenuto: ['', [
         Validators.required,
@@ -52,16 +50,6 @@ export class CreatePostComponent {
     return this.maxCharacters - this.characterCount;
   }
 
-  get characterCountColor(): string {
-    if (this.isOverLimit) {
-      return 'text-danger';
-    } else if (this.remainingCharacters <= 100) {
-      return 'text-warning';
-    } else {
-      return 'text-muted';
-    }
-  }
-
   onSubmit(): void {
     if (this.postForm.invalid || this.isOverLimit) {
       this.postForm.markAllAsTouched();
@@ -72,22 +60,35 @@ export class CreatePostComponent {
     this.errorMessage = '';
     this.successMessage = '';
 
-    this.postService.createPost(this.postForm.value).subscribe({
-      next: (response: PostDto) => {
+    const postFormData = {
+      contenuto: this.postForm.value.contenuto
+    };
+
+    console.log('📤 Dati da inviare:', postFormData);
+
+    this.postService.createPost(postFormData).subscribe({
+      next: (response) => {
+        console.log('✅ Post creato con successo:', response);
         this.successMessage = 'Post creato con successo!';
-        this.postCreated.emit(response);
         this.postForm.reset();
         this.characterCount = 0;
         this.isSubmitting = false;
         
-        // 🔥 MODIFICA: Torna alla home SUBITO senza aspettare
-        console.log('✅ Post creato, ritorno alla home...');
-        this.router.navigate(['/home']);
+        setTimeout(() => {
+          this.router.navigate(['/home']);
+        }, 500);
       },
       error: (error) => {
         this.isSubmitting = false;
-        this.errorMessage = error.error?.message || 'Errore durante la creazione del post. Riprova più tardi.';
-        console.error('Errore creazione post:', error);
+        console.error('❌ Errore completo:', error);
+        
+        if (error.error && typeof error.error === 'string') {
+          this.errorMessage = error.error;
+        } else if (error.error?.message) {
+          this.errorMessage = error.error.message;
+        } else {
+          this.errorMessage = 'Errore durante la creazione del post. Riprova più tardi.';
+        }
       }
     });
   }

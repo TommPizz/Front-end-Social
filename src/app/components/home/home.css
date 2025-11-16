@@ -10,6 +10,26 @@
   padding: 10px;
 }
 
+.create-post-btn {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  margin-right: 10px;
+}
+
+.create-post-btn:hover {
+  background-color: #45a049;
+}
+
+.create-post-btn:active {
+  transform: scale(0.98);
+}
+
 .logout-btn {
   background-color: #e74c3c;
   color: white;

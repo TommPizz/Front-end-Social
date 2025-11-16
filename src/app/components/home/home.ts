@@ -7,6 +7,7 @@ import { PostService } from '../../services/post-service';
 import { LikeService } from '../../services/like-service';
 import { Observable } from 'rxjs';
 import { CommentoService } from '../../services/commento-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -33,6 +34,7 @@ export class HomeComponent implements OnInit {
   commentoDaEliminare = signal<{postId: number, commentoId: number} | null>(null);
 
   constructor(
+    private router: Router,
     private postService: PostService,
     public authService: AuthService,  
     private likeService: LikeService,
@@ -50,6 +52,10 @@ export class HomeComponent implements OnInit {
   logout(): void {
     this.authService.logout();
   }
+
+  navigateToCreatePost(): void {
+  this.router.navigate(['/crea-post']); 
+}
 
   // --- Caricamento Post ---
   loadPosts(): void {

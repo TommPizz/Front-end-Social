@@ -56,7 +56,14 @@
 
         <!-- Contatore caratteri e messaggi di errore -->
         <div class="form-footer">
-          <div class="character-counter" [class]="characterCountColor">
+      
+          <span [ngClass]="{
+            'text-danger': isOverLimit,
+            'text-warning': !isOverLimit && remainingCharacters <= 100,
+            'text-muted': !isOverLimit && remainingCharacters > 100
+          }">
+            {{ characterCount }}/{{ maxCharacters }}
+          </span>
             {{ characterCount }}/{{ maxCharacters }} caratteri
             <span *ngIf="isOverLimit" class="limit-exceeded">Limite superato!</span>
           </div>
@@ -71,7 +78,7 @@
             </div>
           </div>
         </div>
-      </div>
+      
 
       <!-- Azioni -->
       <div class="form-actions">
@@ -94,6 +101,5 @@
           {{ isSubmitting ? 'Pubblicando...' : 'Pubblica Post' }}
         </button>
       </div>
-    </form>
-  </div>
-</div>
+    
+  

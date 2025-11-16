@@ -16,10 +16,9 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(), // Torna a zoneless
     provideRouter(routes), 
-    // provideClientHydration(withEventReplay()), // ← COMMENTA TEMPORANEAMENTE QUESTA RIGA
     provideHttpClient(
       withFetch(),
-      //withInterceptors([authInterceptor]) // ✅ Entrambi nella stessa chiamata
+      withInterceptors([authInterceptor])
     )
   ]
 };
