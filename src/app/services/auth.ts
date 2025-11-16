@@ -60,6 +60,12 @@ export class AuthService {
     return user ? JSON.parse(user) : null;
   }
 
+    getCurrentUsername(): string | null {
+    if (!isPlatformBrowser(this.platformId)) return null;
+    const user = this.getCurrentUser();
+    return user?.username || null;
+  }
+
   private getDecodedToken(token: string): any {
     try {
       return jwtDecode(token);

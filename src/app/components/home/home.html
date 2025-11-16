@@ -27,7 +27,7 @@
         <p>Nessun post disponibile</p>
       </div>
 
-      <div *ngFor="let post of posts(); let i = index; trackBy: trackByPostId" class="post-card">
+      <div *ngFor="let post of posts(); trackBy: trackByPostId" class="post-card">
         <div class="post-header">
           <div class="user-info">
             <span class="username">{{ post.nomeUtente }}</span>
@@ -57,21 +57,134 @@
             </button>
             <span class="like-count">{{ post.numeroLike || 0 }}</span>
           </div>
+          
           <div class="comments">
-            <span class="comment-icon">💬</span>
-            <span class="comment-count">{{ post.commenti?.length || 0 }}</span>
+            <button 
+              class="comment-toggle-btn" 
+              (click)="toggleCommenti(post.id)"
+              [attr.aria-label]="sonoCommentiVisibili(post.id) ? 'Nascondi commenti' : 'Mostra commenti'">
+              <span class="comment-icon">💬</span>
+              <span class="comment-count">{{ post.commenti?.length || 0 }}</span>
+            </button>
           </div>
         </div>
 
-        <!-- Sezione commenti -->
-        <div *ngIf="post.commenti && post.commenti.length > 0" class="comments-section">
-          <h4>Commenti:</h4>
-          <div *ngFor="let commento of post.commenti; trackBy: trackByCommentId" class="comment">
-            <strong>{{ commento.utente?.username || 'Utente' }}</strong>: {{ commento.testo }}
+        <!-- Sezione commenti espandibile -->
+        <div *ngIf="sonoCommentiVisibili(post.id)" class="comments-section">
+          
+          <!-- Form per nuovo commento -->
+          <div class="new-comment-form">
+            <textarea
+              [value]="getTestoCommento(post.id)"
+              (input)="aggiornaTestoCommento(post.id, $any($event.target).value)"
+              placeholder="Scrivi un commento..."
+              maxlength="500"
+              rows="2"
+              [disabled]="isCommentoInCaricamento(post.id)">
+            </textarea>
+            <div class="comment-actions">
+              <span class="char-count">
+                {{ getTestoCommento(post.id).length }}/500
+              </span>
+              <button 
+                class="send-comment-btn"
+                (click)="aggiungiCommento(post.id)"
+                [disabled]="!getTestoCommento(post.id).trim() || isCommentoInCaricamento(post.id)">
+                {{ isCommentoInCaricamento(post.id) ? 'Invio...' : 'Invia' }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Lista commenti -->
+          <div *ngIf="post.commenti && post.commenti.length > 0" class="comments-list">
+            <h4>Commenti ({{ post.commenti.length }}):</h4>
+            
+            <div *ngFor="let commento of post.commenti; trackBy: trackByCommentId" class="comment">
+              <div class="comment-header">
+                <strong class="comment-author">
+                  @{{ commento.utente?.username || 'Utente' }}
+                </strong>
+                <span class="comment-date">{{ formatDate(commento.dataOra) }}</span>
+              </div>
+
+              <!-- Modalità visualizzazione -->
+              <div *ngIf="commentoInModifica() !== commento.idCommento" class="comment-body">
+                <p class="comment-text">{{ commento.testo }}</p>
+                
+                
+                <!-- Azioni commento (solo per il proprietario) -->
+                <div *ngIf="possoModificareCommento(commento)" class="comment-actions-inline">
+                  <button 
+                    class="edit-btn"
+                    (click)="iniziaModificaCommento(commento.idCommento, commento.testo)">
+                    ✏️ Modifica
+                  </button>
+                  <button 
+                    class="delete-btn"
+                    (click)="eliminaCommento(post.id, commento.idCommento)">
+                    🗑️ Elimina
+                  </button>
+                </div>
+              </div>
+
+              <!-- Modalità modifica -->
+              <div *ngIf="commentoInModifica() === commento.idCommento" class="comment-edit">
+                <textarea
+                  [value]="testoModifica()"
+                  (input)="testoModifica.set($any($event.target).value)"
+                  maxlength="500"
+                  rows="2">
+                </textarea>
+                <div class="edit-actions">
+                  <span class="char-count">{{ testoModifica().length }}/500</span>
+                  <button 
+                    class="cancel-btn"
+                    (click)="annullaModifica()">
+                    Annulla
+                  </button>
+                  <button 
+                    class="save-btn"
+                    (click)="salvaModificaCommento(post.id, commento.idCommento)"
+                    [disabled]="!testoModifica().trim()">
+                    Salva
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Messaggio nessun commento -->
+          <div *ngIf="!post.commenti || post.commenti.length === 0" class="no-comments">
+            <p>Nessun commento ancora. Sii il primo a commentare!</p>
           </div>
         </div>
+
       </div>
-
     </div>
   </div>
+
+  <!-- 🗑️ MODALE CONFERMA ELIMINAZIONE COMMENTO -->
+  <div *ngIf="mostraModaleEliminazione()" class="modal-overlay" (click)="chiudiModaleEliminazione()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Conferma eliminazione</h3>
+        <button class="modal-close" (click)="chiudiModaleEliminazione()" aria-label="Chiudi">×</button>
+      </div>
+      
+      <div class="modal-body">
+        <p>Sei sicuro di voler eliminare questo commento?</p>
+        <p class="modal-warning">⚠️ Questa azione non può essere annullata.</p>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="chiudiModaleEliminazione()">
+          Annulla
+        </button>
+        <button class="btn-delete" (click)="confermaEliminazioneCommento()">
+          Elimina
+        </button>
+      </div>
+    </div>
+  </div>
+
 </div>
