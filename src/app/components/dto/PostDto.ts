@@ -4,7 +4,7 @@ import { LikeDto } from "./LikeDto";
 export interface PostDto {
   id: number;
   idUtente: number;
-  nomeUtente: string;
+  usernameUtente: string;
   dataOra: string; // LocalDateTime mappato come string ISO
   contenuto: string;
   commenti?: CommentoDto[]; // Opzionale

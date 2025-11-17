@@ -17,380 +17,212 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.css']
 })
 export class HomeComponent implements OnInit {
-  // Signals esistenti
+
   posts = signal<PostDto[]>([]);
   loading = signal<boolean>(true);
   error = signal<string>('');
   mieiLikeIds = signal<Set<number>>(new Set());
   likingInProgress = signal<Set<number>>(new Set());
 
-  // Signals per i commenti
+  tendenze = signal<PostDto[]>([]);
+  loadingTendenze = signal<boolean>(true);
+  errorTendenze = signal<string>('');
+  mostraTendenze = signal<boolean>(true);
+
   nuoviCommenti = signal<Map<number, string>>(new Map());
   commentoInCaricamento = signal<Set<number>>(new Set());
   mostraCommenti = signal<Set<number>>(new Set());
+  mostraCommentiTendenze = signal<Set<number>>(new Set());
   commentoInModifica = signal<number | null>(null);
   testoModifica = signal<string>('');
   mostraModaleEliminazione = signal<boolean>(false);
   commentoDaEliminare = signal<{postId: number, commentoId: number} | null>(null);
+  postDaEliminare = signal<{postId: number} | null>(null);
 
   constructor(
     private router: Router,
     private postService: PostService,
-    public authService: AuthService,  
+    public authService: AuthService,
     private likeService: LikeService,
     private commentoService: CommentoService
-  ) { 
-    console.log('🏗️ HomeComponent constructor chiamato');
-  }
+  ) {}
 
   ngOnInit(): void {
-    console.log('🚀 ngOnInit chiamato - inizio caricamento post e like');
     this.loadPosts();
+    this.loadTendenze();
     this.loadMieiLike();
   }
 
-  logout(): void {
-    this.authService.logout();
-  }
+  logout(): void { this.authService.logout(); }
+  navigateToCreatePost(): void { this.router.navigate(['/crea-post']); }
 
-  navigateToCreatePost(): void {
-  this.router.navigate(['/crea-post']); 
-}
-
-  // --- Caricamento Post ---
   loadPosts(): void {
     this.loading.set(true);
     this.error.set('');
-
     this.postService.getAllPosts().subscribe({
-      next: (data) => {
-        this.posts.set(data);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        this.error.set('Impossibile caricare i post: ' + (err.message || 'Errore sconosciuto'));
-        this.loading.set(false);
-      }
+      next: data => { this.posts.set(data); this.loading.set(false); },
+      error: err => { this.error.set('Impossibile caricare i post: ' + (err.message || 'Errore sconosciuto')); this.loading.set(false); }
     });
   }
 
-  // --- Caricamento dei like dell'utente ---
+  loadTendenze(): void {
+    this.loadingTendenze.set(true);
+    this.errorTendenze.set('');
+    this.postService.getTendenze().subscribe({
+      next: data => { this.tendenze.set(data); this.loadingTendenze.set(false); },
+      error: err => { this.errorTendenze.set('Impossibile caricare i post di tendenza: ' + (err.message || 'Errore sconosciuto')); this.loadingTendenze.set(false); }
+    });
+  }
+
+  toggleMostraTendenze(): void { this.mostraTendenze.update(v => !v); }
+
   loadMieiLike(): void {
-    console.log('⭐ Caricamento dei miei like...');
     this.likeService.getMieiLike().subscribe({
       next: (response: any) => {
-        let lista = Array.isArray(response)
-          ? response
-          : Array.isArray(response.content)
-            ? response.content
-            : [];
-
+        let lista = Array.isArray(response) ? response : Array.isArray(response.content) ? response.content : [];
         const likeIds = new Set<number>(lista.map((like: any) => Number(like.idPost)));
         this.mieiLikeIds.set(likeIds);
-        console.log("✔️ Set dei like aggiornato:", Array.from(likeIds));
-      },
-      error: (err: any) => {
-        console.error("❌ Errore nel caricamento dei like:", err);
       }
     });
   }
 
-  // --- Toggle Like ---
   toggleLike(post: PostDto): void {
     const postId = post.id;
-
     if (this.isLikingInProgress(postId)) return;
-
     this.likingInProgress.update(set => new Set(set).add(postId));
-
     const alreadyLiked = this.hasLiked(postId);
-
-    const action$: Observable<any> = alreadyLiked
-      ? this.likeService.rimuoviLike(postId)
-      : this.likeService.creaLike(postId);
+    const action$: Observable<any> = alreadyLiked ? this.likeService.rimuoviLike(postId) : this.likeService.creaLike(postId);
 
     action$.subscribe({
       next: () => {
-        this.posts.update(posts =>
-          posts.map(p =>
-            p.id === postId
-              ? { ...p, numeroLike: (p.numeroLike ?? 0) + (alreadyLiked ? -1 : 1) }
-              : p
-          )
-        );
-
+        const aggiorna = (posts: PostDto[]) => posts.map(p => p.id === postId ? { ...p, numeroLike: (p.numeroLike ?? 0) + (alreadyLiked ? -1 : 1) } : p);
+        this.posts.update(aggiorna);
+        this.tendenze.update(aggiorna);
         this.mieiLikeIds.update(set => {
           const ns = new Set(set);
-          if (alreadyLiked) ns.delete(postId);
-          else ns.add(postId);
+          alreadyLiked ? ns.delete(postId) : ns.add(postId);
           return ns;
         });
       },
-      error: (err: any) => {
-        console.error("❌ Errore toggle like:", err);
-      },
-      complete: () => {
-        this.likingInProgress.update(set => {
-          const ns = new Set(set);
-          ns.delete(postId);
-          return ns;
-        });
-      }
+      complete: () => { this.likingInProgress.update(set => { const ns = new Set(set); ns.delete(postId); return ns; }); }
     });
   }
 
-  // --- GESTIONE COMMENTI ---
-
-  // Toggle visualizzazione commenti
   toggleCommenti(postId: number): void {
     this.mostraCommenti.update(set => {
       const ns = new Set(set);
-      if (ns.has(postId)) {
-        ns.delete(postId);
-      } else {
-        ns.add(postId);
-      }
+      ns.has(postId) ? ns.delete(postId) : ns.add(postId);
       return ns;
     });
   }
-
-  // Verifica se i commenti sono visibili
-  sonoCommentiVisibili(postId: number): boolean {
-    return this.mostraCommenti().has(postId);
+  toggleCommentiTendenze(postId: number): void {
+    this.mostraCommentiTendenze.update(set => {
+      const ns = new Set(set);
+      ns.has(postId) ? ns.delete(postId) : ns.add(postId);
+      return ns;
+    });
   }
+  sonoCommentiVisibili(postId: number): boolean { return this.mostraCommenti().has(postId); }
+  sonoCommentiVisibiliTendenze(postId: number): boolean { return this.mostraCommentiTendenze().has(postId); }
 
-  // Aggiungi commento
+  aggiornaTestoCommento(postId: number, testo: string): void {
+    this.nuoviCommenti.update(map => { const nm = new Map(map); nm.set(postId, testo); return nm; });
+  }
+  getTestoCommento(postId: number): string { return this.nuoviCommenti().get(postId) || ''; }
+  isCommentoInCaricamento(postId: number): boolean { return this.commentoInCaricamento().has(postId); }
+
   aggiungiCommento(postId: number): void {
     const testo = this.nuoviCommenti().get(postId)?.trim();
-    
-    if (!testo || testo.length === 0) {
-      console.warn('Testo commento vuoto');
-      return;
-    }
-
-    if (testo.length > 500) {
-      alert('Il commento non può superare i 500 caratteri');
-      return;
-    }
-
+    if (!testo) return;
     this.commentoInCaricamento.update(set => new Set(set).add(postId));
-
-    const form = {
-      idPost: postId,
-      testo: testo
-    };
-
-    this.commentoService.creaCommento(form).subscribe({
-      next: (nuovoCommento) => {
-        console.log('✅ Commento creato:', nuovoCommento);
-        
-        // Aggiorna il post con il nuovo commento
-        this.posts.update(posts =>
-          posts.map(p => {
-            if (p.id === postId) {
-              const commentiEsistenti = p.commenti || [];
-              return {
-                ...p,
-                commenti: [...commentiEsistenti, nuovoCommento]
-              };
-            }
-            return p;
-          })
-        );
-
-        // Pulisci il campo di input
-        this.nuoviCommenti.update(map => {
-          const nm = new Map(map);
-          nm.delete(postId);
-          return nm;
-        });
+    this.commentoService.creaCommento({ idPost: postId, testo }).subscribe({
+      next: nuovoCommento => {
+        const aggiorna = (posts: PostDto[]) => posts.map(p => p.id === postId ? { ...p, commenti: [...(p.commenti || []), nuovoCommento] } : p);
+        this.posts.update(aggiorna);
+        this.tendenze.update(aggiorna);
+        this.nuoviCommenti.update(map => { const nm = new Map(map); nm.delete(postId); return nm; });
       },
-      error: (err) => {
-        console.error('❌ Errore creazione commento:', err);
-        alert('Errore durante la creazione del commento');
-      },
-      complete: () => {
-        this.commentoInCaricamento.update(set => {
-          const ns = new Set(set);
-          ns.delete(postId);
-          return ns;
-        });
-      }
+      complete: () => { this.commentoInCaricamento.update(set => { const ns = new Set(set); ns.delete(postId); return ns; }); }
     });
   }
 
-  // Aggiorna testo commento nel signal
-  aggiornaTestoCommento(postId: number, testo: string): void {
-    this.nuoviCommenti.update(map => {
-      const nm = new Map(map);
-      nm.set(postId, testo);
-      return nm;
-    });
-  }
+  iniziaModificaCommento(commentoId: number, testoAttuale: string): void { this.commentoInModifica.set(commentoId); this.testoModifica.set(testoAttuale); }
+  annullaModifica(): void { this.commentoInModifica.set(null); this.testoModifica.set(''); }
 
-  // Ottieni testo commento dal signal
-  getTestoCommento(postId: number): string {
-    return this.nuoviCommenti().get(postId) || '';
-  }
-
-  // Verifica se il commento è in caricamento
-  isCommentoInCaricamento(postId: number): boolean {
-    return this.commentoInCaricamento().has(postId);
-  }
-
-  // Avvia modifica commento
-  iniziaModificaCommento(commentoId: number, testoAttuale: string): void {
-    this.commentoInModifica.set(commentoId);
-    this.testoModifica.set(testoAttuale);
-  }
-
-  // Annulla modifica
-  annullaModifica(): void {
-    this.commentoInModifica.set(null);
-    this.testoModifica.set('');
-  }
-
-  // Salva modifica commento
   salvaModificaCommento(postId: number, commentoId: number): void {
     const nuovoTesto = this.testoModifica().trim();
-    
-    if (!nuovoTesto || nuovoTesto.length === 0) {
-      alert('Il testo del commento non può essere vuoto');
-      return;
-    }
-
-    if (nuovoTesto.length > 500) {
-      alert('Il commento non può superare i 500 caratteri');
-      return;
-    }
-
-    const form = {
-      idPost: postId,
-      testo: nuovoTesto
-    };
-
-    this.commentoService.aggiornaCommento(commentoId, form).subscribe({
-      next: (commentoAggiornato) => {
-        console.log('✅ Commento aggiornato:', commentoAggiornato);
-        
-        // Aggiorna il post con il commento modificato
-        this.posts.update(posts =>
-          posts.map(p => {
-            if (p.id === postId && p.commenti) {
-              return {
-                ...p,
-                commenti: p.commenti.map(c =>
-                  c.idCommento === commentoId ? commentoAggiornato : c
-                )
-              };
-            }
-            return p;
-          })
-        );
-
+    if (!nuovoTesto) return;
+    this.commentoService.aggiornaCommento(commentoId, { idPost: postId, testo: nuovoTesto }).subscribe({
+      next: commentoAggiornato => {
+        const aggiorna = (posts: PostDto[]) => posts.map(p => p.id === postId && p.commenti ? { ...p, commenti: p.commenti.map(c => c.idCommento === commentoId ? commentoAggiornato : c) } : p);
+        this.posts.update(aggiorna);
+        this.tendenze.update(aggiorna);
         this.annullaModifica();
-      },
-      error: (err) => {
-        console.error('❌ Errore modifica commento:', err);
-        alert('Errore durante la modifica del commento');
       }
     });
   }
 
-  // Elimina commento - apre il modale di conferma
-  eliminaCommento(postId: number, commentoId: number): void {
-    this.apriModaleEliminazione(postId, commentoId);
-  }
+  posoModificareCommento(commento: any): boolean { return this.authService.getCurrentUsername() === commento.utente?.username; }
+  possoModificareCommento(commento: any): boolean { return this.authService.getCurrentUsername() === commento.utente?.username; }
+  possoEliminarePost(post: PostDto): boolean { return this.authService.getCurrentUsername() === post.usernameUtente; }
 
-  // Verifica se l'utente può modificare/eliminare il commento
-  possoModificareCommento(commento: any): boolean {
-    const currentUsername = this.authService.getCurrentUsername();
-    
-    // Debug (rimuovi dopo aver verificato che funziona)
-    console.log('🔍 Current username:', currentUsername);
-    console.log('🔍 Comment author:', commento.utente);
-    
-    // L'utente può modificare se è il proprietario del commento
-    return currentUsername === commento.utente?.username;
-  }
-
-  // --- Funzioni Helper esistenti ---
-  hasLiked(postId: number): boolean {
-    return this.mieiLikeIds().has(postId);
-  }
-
-  isLikingInProgress(postId: number): boolean {
-    return this.likingInProgress().has(postId);
-  }
-
-  formatDate(dataOra: string): string {
-    try {
-      const date = new Date(dataOra);
-      return date.toLocaleDateString('it-IT', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    } catch (e) {
-      console.error('Errore formattazione data:', e);
-      return dataOra;
-    }
-  }
-
-  trackByPostId(index: number, post: PostDto) {
-    return post.id;
-  }
-
-  trackByCommentId(index: number, commento: any) {
-    return commento.idCommento;
-  }
-
-  // Apri modale eliminazione
-  apriModaleEliminazione(postId: number, commentoId: number): void {
+  // --- MODALE UNIFICATA ---
+  apriModaleEliminazioneCommento(postId: number, commentoId: number): void {
     this.commentoDaEliminare.set({ postId, commentoId });
+    this.postDaEliminare.set(null);
     this.mostraModaleEliminazione.set(true);
   }
 
-  // Conferma eliminazione dal modale
+  apriModaleEliminazionePost(post: PostDto): void {
+    if (!this.possoEliminarePost(post)) return;
+    this.postDaEliminare.set({ postId: post.id });
+    this.commentoDaEliminare.set(null);
+    this.mostraModaleEliminazione.set(true);
+  }
+
+  chiudiModaleEliminazione(): void {
+    this.commentoDaEliminare.set(null);
+    this.postDaEliminare.set(null);
+    this.mostraModaleEliminazione.set(false);
+  }
+
+  confermaEliminazione(): void {
+    if (this.commentoDaEliminare()) this.confermaEliminazioneCommento();
+    else if (this.postDaEliminare()) this.confermaEliminazionePost();
+  }
+
   confermaEliminazioneCommento(): void {
     const dati = this.commentoDaEliminare();
     if (!dati) return;
-
     const { postId, commentoId } = dati;
-
     this.commentoService.eliminaCommento(commentoId).subscribe({
       next: () => {
-        console.log('✅ Commento eliminato');
-        
-        // Rimuovi il commento dal post
-        this.posts.update(posts =>
-          posts.map(p => {
-            if (p.id === postId && p.commenti) {
-              return {
-                ...p,
-                commenti: p.commenti.filter(c => c.idCommento !== commentoId)
-              };
-            }
-            return p;
-          })
-        );
-
-        // Chiudi il modale
-        this.chiudiModaleEliminazione();
-      },
-      error: (err) => {
-        console.error('❌ Errore eliminazione commento:', err);
-        alert('Errore durante l\'eliminazione del commento');
+        const aggiorna = (posts: PostDto[]) => posts.map(p => p.id === postId && p.commenti ? { ...p, commenti: p.commenti.filter(c => c.idCommento !== commentoId) } : p);
+        this.posts.update(aggiorna);
+        this.tendenze.update(aggiorna);
         this.chiudiModaleEliminazione();
       }
     });
   }
 
-  // Annulla eliminazione
-  chiudiModaleEliminazione(): void {
-    this.mostraModaleEliminazione.set(false);
-    this.commentoDaEliminare.set(null);
+  confermaEliminazionePost(): void {
+    const dati = this.postDaEliminare();
+    if (!dati) return;
+    const { postId } = dati;
+    this.postService.deletePost(postId).subscribe({
+      next: () => {
+        const aggiorna = (posts: PostDto[]) => posts.filter(p => p.id !== postId);
+        this.posts.update(aggiorna);
+        this.tendenze.update(aggiorna);
+        this.chiudiModaleEliminazione();
+      }
+    });
   }
+
+  // --- Helper ---
+  hasLiked(postId: number): boolean { return this.mieiLikeIds().has(postId); }
+  isLikingInProgress(postId: number): boolean { return this.likingInProgress().has(postId); }
+  formatDate(dataOra: string): string { return new Date(dataOra).toLocaleString('it-IT', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }); }
+  trackByPostId(index: number, post: PostDto) { return post.id; }
+  trackByCommentId(index: number, commento: any) { return commento.idCommento; }
 }

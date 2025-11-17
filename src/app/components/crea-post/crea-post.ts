@@ -11,7 +11,7 @@ import { PostService } from '../../services/post-service';
   templateUrl: './crea-post.html',
   styleUrls: ['./crea-post.css']
 })
-export class CreatePostComponent { // ⬅️ DEVE AVERE 'export class'
+export class CreatePostComponent { 
   postForm: FormGroup;
   isSubmitting = false;
   errorMessage = '';

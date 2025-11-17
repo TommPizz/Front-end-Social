@@ -1,769 +1,673 @@
-.home-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+/* Reset e base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+  color: #2c3e7d;
+}
+
+.home-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Top Bar con effetto liquid glass */
 .top-bar {
   display: flex;
-  justify-content: flex-end;
-  padding: 10px;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(44, 62, 125, 0.75);
+  backdrop-filter: blur(10px);
+  padding: 15px 30px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
 }
 
+/* Pulsanti top bar */
 .create-post-btn {
-  padding: 10px 20px;
-  background-color: #4CAF50;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  border-radius: 5px;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-size: 16px;
   cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.3s ease;
-  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 10px rgba(102, 126, 234, 0.5);
 }
 
 .create-post-btn:hover {
-  background-color: #45a049;
-}
-
-.create-post-btn:active {
-  transform: scale(0.98);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
 }
 
 .logout-btn {
-  background-color: #e74c3c;
+  background: transparent;
   color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 5px;
+  border: 2px solid white;
+  padding: 10px 25px;
+  border-radius: 25px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.6);
 }
 
 .logout-btn:hover {
-  background-color: #c0392b;
+  background: white;
+  color: #2c3e7d;
+  box-shadow: 0 4px 20px rgba(44, 62, 125, 0.5);
 }
 
 h1 {
   text-align: center;
-  color: #333;
-  margin-bottom: 30px;
-}
-
-.loading {
-  text-align: center;
-  padding: 40px;
-  font-size: 18px;
-  color: #666;
-}
-
-.error-message {
-  background-color: #fee;
-  border: 1px solid #fcc;
-  color: #c33;
-  padding: 15px;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.error-message button {
-  margin-top: 10px;
-  padding: 8px 16px;
-  background-color: #c33;
   color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  font-size: 2.5em;
+  margin: 20px 0;
+  text-shadow: 1.5px 1.5px 5px rgba(0, 0, 0, 0.4);
 }
 
-.error-message button:hover {
-  background-color: #a22;
-}
-
-.no-posts {
-  text-align: center;
-  padding: 40px;
-  color: #999;
-  font-size: 16px;
-}
-
-.posts-list {
-  display: flex;
-  flex-direction: column;
+/* Layout principale - Grid a 2 colonne */
+.home-container {
+  display: grid;
+  grid-template-columns: 1fr 400px;
   gap: 20px;
+  grid-template-areas:
+    "topbar topbar"
+    "title title"
+    "feed tendenze";
+}
+
+.top-bar {
+  grid-area: topbar;
+}
+
+h1 {
+  grid-area: title;
+}
+
+/* Sezione principale feed */
+.main-feed-section {
+  grid-area: feed;
+  background: #ff8914;
+  border-radius: 20px;
+  padding: 30px 30px 40px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
+  height: fit-content;
+}
+
+/* Sezione tendenze con effetto liquid glass */
+.tendenze-section {
+  grid-area: tendenze;
+  background: rgba(125, 211, 192, 0.25);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 30px 25px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 20px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  color: #1a3a3a;
+  border: 1.5px solid rgba(125, 211, 192, 0.5);
+}
+
+/* Rimozione del toggle, quindi header tendenze senza bottone */
+.tendenze-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+  gap: 12px;
+}
+
+.fire-icon {
+  font-size: 1.3em;
+  color: #34b399;
+  animation: flicker 1.5s infinite;
+  text-shadow: 0 0 6px #34b399aa;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+/* Carousel tendenze - griglia pulita */
+.tendenze-carousel {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 22px;
+  margin-top: 10px;
+}
+
+/* Card tendenze */
+.tendenza-card {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 16px;
+  padding: 22px 25px;
+  box-shadow: 0 6px 20px rgba(52, 179, 153, 0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tendenza-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(52, 179, 153, 0.35);
+}
+
+/* Post cards feed */
+.posts-list {
+  display: grid;
+  gap: 24px;
 }
 
 .post-card {
   background: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: box-shadow 0.3s ease;
+  border: 2px solid #ff8914;
+  border-radius: 18px;
+  padding: 28px 30px;
+  box-shadow: 0 6px 20px rgba(255, 137, 20, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .post-card:hover {
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(255, 137, 20, 0.30);
 }
 
+/* Header post */
 .post-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 18px;
 }
 
 .user-info {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
 }
 
 .username {
-  font-weight: bold;
-  color: #333;
-  font-size: 16px;
+  font-weight: 600;
+  color: #2c3e7d;
+  font-size: 1.15em;
+  letter-spacing: 0.02em;
 }
 
 .date {
-  color: #666;
-  font-size: 12px;
+  color: #7a7a7a;
+  font-size: 0.85em;
+  font-weight: 400;
 }
 
+/* Post content */
 .post-content {
-  margin-bottom: 15px;
+  margin: 20px 0;
+  color: #444;
+  line-height: 1.65;
+  font-size: 1.1em;
+  font-weight: 400;
 }
 
-.post-content p {
-  color: #333;
-  line-height: 1.6;
-  margin: 0;
-  white-space: pre-wrap;
-}
-
+/* Footer post */
 .post-footer {
   display: flex;
-  gap: 20px;
-  padding-top: 10px;
-  border-top: 1px solid #eee;
+  gap: 30px;
+  align-items: center;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 2px solid rgba(255, 255, 255, 0.35);
 }
 
-.likes, .comments {
+.likes,
+.comments {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: #666;
+  gap: 10px;
 }
 
-/* ⭐ STILI PER IL PULSANTE LIKE CON STELLA ⭐ */
+/* Bottoni like */
 .like-btn {
-  background: none;
+  background: white;
   border: none;
-  cursor: pointer;
-  padding: 4px;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s ease;
-  outline: none;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.like-btn:hover:not(:disabled) {
-  transform: scale(1.15);
+.like-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
 }
 
-.like-btn:active:not(:disabled) {
-  transform: scale(0.9);
-}
-
-.like-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-/* Stella SVG */
 .star-icon {
-  width: 22px;
-  height: 22px;
-  fill: white;
-  stroke: #ffd700;
-  stroke-width: 2;
-  transition: all 0.3s ease;
+  width: 26px;
+  height: 26px;
+  fill: #bbb;
+  transition: fill 0.3s ease;
 }
 
-/* Stella quando è attiva (liked) */
 .like-btn.liked .star-icon {
   fill: #ffd700;
-  stroke: #ffa500;
-  animation: star-pop 0.5s ease;
-}
-
-/* Animazione quando si clicca sulla stella */
-@keyframes star-pop {
-  0% {
-    transform: scale(1) rotate(0deg);
-  }
-  30% {
-    transform: scale(1.4) rotate(-15deg);
-  }
-  60% {
-    transform: scale(1.2) rotate(15deg);
-  }
-  100% {
-    transform: scale(1) rotate(0deg);
-  }
-}
-
-/* Animazione al hover */
-.like-btn:hover:not(:disabled) .star-icon {
-  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5));
-  transform: rotate(-10deg);
-}
-
-/* Effetto quando il like è attivo e si passa sopra */
-.like-btn.liked:hover:not(:disabled) .star-icon {
-  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
-  transform: rotate(10deg) scale(1.05);
-}
-
-/* Animazione pulsante quando è premuto */
-.like-btn.liked {
-  animation: pulse 0.5s ease;
+  animation: pulse 0.35s ease;
 }
 
 @keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
 }
 
-/* Stato di loading */
-.like-btn.loading .star-icon {
-  animation: rotate 1s linear infinite;
-  opacity: 0.5;
+/* Conteggio like e commenti */
+.like-count,
+.comment-count {
+  font-weight: 700;
+  color: #2c3e7d;
+  font-size: 1.15em;
+  user-select: none;
 }
 
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Fine stili like */
-
-.like-count, .comment-count {
-  font-weight: 500;
-  font-size: 14px;
-  color: #333;
-  min-width: 20px;
-  text-align: left;
-}
-
-.comment-icon {
-  font-size: 18px;
-}
-
-/* 💬 PULSANTE TOGGLE COMMENTI */
+/* Bottone commenti */
 .comment-toggle-btn {
-  background: none;
+  background: white;
   border: none;
-  cursor: pointer;
-  padding: 4px 8px;
+  border-radius: 25px;
+  padding: 12px 25px;
   display: flex;
   align-items: center;
-  gap: 6px;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+  transition: background 0.3s ease, transform 0.3s ease;
 }
 
 .comment-toggle-btn:hover {
-  background-color: #f0f0f0;
+  background: #f7f7f7;
+  transform: translateY(-2px);
 }
 
-/* === SEZIONE COMMENTI === */
+.comment-icon {
+  font-size: 1.3em;
+}
+
+/* Sezione commenti */
 .comments-section {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 2px solid #e9ecef;
-  animation: slideDown 0.3s ease-out;
+  margin-top: 25px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.60);
+  border-radius: 14px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    max-height: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    max-height: 2000px;
-    transform: translateY(0);
-  }
-}
-
-/* === FORM NUOVO COMMENTO === */
+/* Nuovo commento */
 .new-comment-form {
-  margin-bottom: 20px;
-  padding: 15px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
+  margin-bottom: 25px;
 }
 
 .new-comment-form textarea {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-family: inherit;
-  font-size: 14px;
+  padding: 14px 16px;
+  border: 2px solid #bbb;
+  border-radius: 12px;
+  font-size: 15px;
   resize: vertical;
-  min-height: 60px;
-  transition: border-color 0.3s, box-shadow 0.3s;
-  box-sizing: border-box;
+  font-family: inherit;
+  transition: border-color 0.4s ease;
 }
 
 .new-comment-form textarea:focus {
   outline: none;
-  border-color: #3498db;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  border-color: #667eea;
 }
 
-.new-comment-form textarea:disabled {
-  background-color: #e9ecef;
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-.comment-actions, .edit-actions {
+/* Azioni nuovo commento */
+.comment-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
-  gap: 10px;
+  margin-top: 12px;
 }
 
 .char-count {
-  font-size: 12px;
-  color: #6c757d;
-  font-weight: 500;
+  color: #666;
+  font-size: 0.9em;
+  user-select: none;
 }
 
-.send-comment-btn, .save-btn {
-  padding: 8px 20px;
-  background-color: #3498db;
+.send-comment-btn {
+  background: #667eea;
   color: white;
   border: none;
-  border-radius: 5px;
+  padding: 12px 28px;
+  border-radius: 22px;
   cursor: pointer;
-  font-weight: 500;
-  font-size: 14px;
-  transition: background-color 0.3s, transform 0.1s;
+  font-weight: 600;
+  font-size: 1em;
+  transition: background 0.3s ease;
 }
 
-.send-comment-btn:hover, .save-btn:hover {
-  background-color: #2980b9;
-  transform: translateY(-1px);
+.send-comment-btn:hover:not(:disabled) {
+  background: #5568d3;
 }
 
-.send-comment-btn:active, .save-btn:active {
-  transform: translateY(0);
-}
-
-.send-comment-btn:disabled, .save-btn:disabled {
-  background-color: #95a5a6;
+.send-comment-btn:disabled {
+  opacity: 0.55;
   cursor: not-allowed;
-  opacity: 0.6;
-  transform: none;
 }
 
-/* === LISTA COMMENTI === */
+/* Lista commenti */
 .comments-list {
-  margin-top: 15px;
+  margin-top: 25px;
 }
 
 .comments-list h4 {
-  font-size: 15px;
-  color: #495057;
-  margin-bottom: 15px;
+  color: #2c3e7d;
+  margin-bottom: 18px;
   font-weight: 600;
 }
 
+/* Singolo commento */
 .comment {
-  padding: 12px 15px;
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  margin-bottom: 12px;
-  transition: background-color 0.2s, box-shadow 0.2s;
-}
-
-.comment:hover {
-  background-color: #f9f9f9;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  background: white;
+  padding: 18px 20px;
+  border-radius: 10px;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
 }
 
 .comment-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .comment-author {
-  color: #2c3e50;
-  font-size: 14px;
+  color: #2c3e7d;
+  font-size: 1em;
   font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.username-badge {
-  font-size: 12px;
-  color: #7f8c8d;
-  font-weight: 400;
-  font-style: italic;
-}
-
-.comment-debug {
-  margin-top: 8px;
-  padding: 8px;
-  background-color: #fff3cd;
-  border: 1px solid #ffc107;
-  border-radius: 4px;
-  font-size: 11px;
-  color: #856404;
 }
 
 .comment-date {
-  font-size: 11px;
-  color: #7f8c8d;
-}
-
-.comment-body {
-  margin-top: 8px;
+  color: #a3a3a3;
+  font-size: 0.82em;
+  user-select: none;
 }
 
 .comment-text {
   color: #333;
   line-height: 1.6;
-  margin: 0 0 10px 0;
-  font-size: 14px;
-  white-space: pre-wrap;
-  word-wrap: break-word;
+  margin: 12px 0 6px;
+  font-weight: 400;
 }
 
-/* === AZIONI INLINE COMMENTO === */
+/* Azioni modifica ed elimina */
 .comment-actions-inline {
   display: flex;
   gap: 12px;
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
-.edit-btn, .delete-btn, .cancel-btn {
-  padding: 5px 12px;
-  font-size: 12px;
+.edit-btn,
+.delete-btn {
+  background: transparent;
   border: none;
-  border-radius: 4px;
+  color: #667eea;
   cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s;
-  background-color: transparent;
-}
-
-.edit-btn {
-  color: #3498db;
-  border: 1px solid transparent;
+  font-size: 0.9em;
+  padding: 6px 14px;
+  border-radius: 7px;
+  transition: background 0.3s ease;
+  font-weight: 600;
 }
 
 .edit-btn:hover {
-  background-color: #e3f2fd;
-  border-color: #3498db;
+  background: rgba(102, 126, 234, 0.15);
 }
 
 .delete-btn {
   color: #e74c3c;
-  border: 1px solid transparent;
 }
 
 .delete-btn:hover {
-  background-color: #ffebee;
-  border-color: #e74c3c;
+  background: rgba(231, 76, 60, 0.15);
 }
 
-.cancel-btn {
-  color: #7f8c8d;
-  border: 1px solid transparent;
-}
-
-.cancel-btn:hover {
-  background-color: #ecf0f1;
-  border-color: #95a5a6;
-}
-
-/* === MODALITÀ MODIFICA COMMENTO === */
-.comment-edit {
-  margin-top: 8px;
-}
-
+/* Modalità modifica commento */
 .comment-edit textarea {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-family: inherit;
-  font-size: 14px;
+  padding: 14px;
+  border: 2px solid #667eea;
+  border-radius: 12px;
+  font-size: 15px;
   resize: vertical;
-  min-height: 60px;
-  transition: border-color 0.3s, box-shadow 0.3s;
-  box-sizing: border-box;
-}
-
-.comment-edit textarea:focus {
-  outline: none;
-  border-color: #3498db;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  font-family: inherit;
+  font-weight: 400;
 }
 
 .edit-actions {
-  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
 }
 
-/* === MESSAGGIO NESSUN COMMENTO === */
-.no-comments {
-  text-align: center;
-  padding: 30px 20px;
-  color: #95a5a6;
-  font-style: italic;
-  background-color: #f8f9fa;
-  border-radius: 6px;
-  border: 1px dashed #ddd;
+.cancel-btn,
+.save-btn {
+  padding: 10px 28px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
-.no-comments p {
-  margin: 0;
-  font-size: 14px;
+.cancel-btn {
+  background: #ddd;
+  color: #444;
 }
 
-/* === RESPONSIVE === */
-@media (max-width: 768px) {
-  .home-container {
-    padding: 10px;
-  }
-  
-  .post-card {
-    padding: 15px;
-  }
-
-  .star-icon {
-    width: 20px;
-    height: 20px;
-  }
-
-  .like-count, .comment-count {
-    font-size: 13px;
-  }
-
-  .new-comment-form {
-    padding: 12px;
-  }
-
-  .comment-actions-inline {
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .comment-actions, .edit-actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .send-comment-btn, .save-btn {
-    width: 100%;
-  }
-
-  .char-count {
-    order: -1;
-    text-align: right;
-  }
+.cancel-btn:hover {
+  background: #bbb;
 }
 
-/* === MODALE CONFERMA ELIMINAZIONE === */
+.save-btn {
+  background: #667eea;
+  color: white;
+}
+
+.save-btn:hover:not(:disabled) {
+  background: #5568d3;
+}
+
+.save-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Modal eliminazione commento */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.65);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
-  animation: fadeIn 0.2s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  z-index: 1050;
+  backdrop-filter: blur(6px);
 }
 
 .modal-content {
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-  max-width: 450px;
-  width: 90%;
-  animation: slideUp 0.3s ease-out;
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(30px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  border-radius: 16px;
+  padding: 35px 38px;
+  max-width: 460px;
+  width: 92%;
+  box-shadow: 0 14px 50px rgba(0, 0, 0, 0.3);
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 24px;
-  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 24px;
 }
 
 .modal-header h3 {
-  margin: 0;
-  font-size: 20px;
-  color: #2c3e50;
-  font-weight: 600;
+  color: #2c3e7d;
+  font-size: 1.6em;
+  font-weight: 700;
 }
 
 .modal-close {
-  background: none;
+  background: transparent;
   border: none;
-  font-size: 32px;
-  color: #95a5a6;
+  font-size: 2.3em;
   cursor: pointer;
+  color: #999;
   line-height: 1;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  transition: all 0.2s;
+  transition: color 0.3s ease;
 }
 
 .modal-close:hover {
-  background-color: #f0f0f0;
-  color: #2c3e50;
+  color: #333;
 }
 
 .modal-body {
-  padding: 24px;
-}
-
-.modal-body p {
-  margin: 0 0 12px 0;
+  margin: 25px 0;
   color: #333;
-  font-size: 15px;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 .modal-warning {
   color: #e67e22;
-  font-size: 14px;
-  font-weight: 500;
-  padding: 12px;
-  background-color: #fff3e0;
-  border-radius: 6px;
-  border-left: 4px solid #e67e22;
-  margin: 16px 0 0 0 !important;
+  font-weight: 700;
 }
 
 .modal-footer {
   display: flex;
+  gap: 18px;
   justify-content: flex-end;
-  gap: 12px;
-  padding: 16px 24px;
-  border-top: 1px solid #e0e0e0;
-  background-color: #f8f9fa;
-  border-radius: 0 0 12px 12px;
+  margin-top: 35px;
 }
 
-.btn-cancel, .btn-delete {
-  padding: 10px 24px;
+.btn-cancel,
+.btn-delete {
+  padding: 14px 34px;
   border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
+  border-radius: 28px;
   cursor: pointer;
-  transition: all 0.3s;
+  font-size: 1.05em;
+  font-weight: 700;
+  transition: all 0.3s ease;
 }
 
 .btn-cancel {
-  background-color: #ecf0f1;
-  color: #2c3e50;
+  background: #dadada;
+  color: #444;
 }
 
 .btn-cancel:hover {
-  background-color: #d5dbdb;
+  background: #bfbfbf;
 }
 
 .btn-delete {
-  background-color: #e74c3c;
+  background: #e74c3c;
   color: white;
 }
 
 .btn-delete:hover {
-  background-color: #c0392b;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+  background: #c0392b;
+  box-shadow: 0 5px 20px rgba(231, 76, 60, 0.5);
 }
 
-.btn-delete:active {
-  transform: translateY(0);
+/* Stati caricamento & errore & vuoti */
+.loading,
+.error-message,
+.no-posts,
+.no-comments {
+  text-align: center;
+  padding: 30px;
+  color: #555;
+  font-weight: 600;
 }
 
-/* Responsive modale */
+.error-message {
+  background: #ffe8e8;
+  border: 2px solid #ff5252;
+  border-radius: 12px;
+  color: #c00808;
+}
+
+.error-message button {
+  margin-top: 18px;
+  background: #ff5252;
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: background 0.3s ease;
+}
+
+.error-message button:hover {
+  background: #cc0000;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-  .modal-content {
-    max-width: 95%;
-    margin: 20px;
+  .home-container {
+    padding: 12px;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "topbar"
+      "title"
+      "tendenze"
+      "feed";
   }
 
-  .modal-header {
-    padding: 16px 20px;
+  .top-bar {
+    flex-direction: column;
+    gap: 14px;
   }
 
-  .modal-body {
-    padding: 20px;
+  h1 {
+    font-size: 1.9em;
   }
 
-  .modal-footer {
-    padding: 12px 20px;
-    flex-direction: column-reverse;
+  .tendenze-carousel {
+    grid-template-columns: 1fr;
   }
 
-  .btn-cancel, .btn-delete {
-    width: 100%;
+  .post-card,
+  .tendenza-card {
+    padding: 18px 20px;
+  }
+
+  .tendenze-section {
+    max-height: none;
+    position: relative;
+    top: auto;
   }
 }
