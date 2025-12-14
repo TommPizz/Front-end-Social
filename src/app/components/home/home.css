@@ -13,6 +13,7 @@ body {
 
 .home-container {
   min-height: 100vh;
+  background-color: #acecff;
 }
 
 /* Header */
@@ -239,8 +240,8 @@ body {
 
 /* Post card */
 .post-card {
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: rgb(251, 253, 253);
+  border: 3px solid #ee8700;
   border-radius: 12px;
   margin-bottom: 16px;
   padding: 20px;
@@ -321,7 +322,7 @@ body {
   display: flex;
   gap: 8px;
   padding-top: 12px;
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid #000000;
 }
 
 .action-btn {
@@ -560,7 +561,7 @@ body {
 
 .sidebar-section {
   background: white;
-  border: 1px solid #e5e7eb;
+  border: 4px solid #00fc22;
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 16px;
@@ -578,7 +579,7 @@ body {
 
 .trending-post {
   padding: 12px 0;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid #0055ff;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -841,4 +842,42 @@ body {
     font-size: 13px;
     padding: 6px 12px;
   }
+  /* =========================
+   FONT AWESOME ACTIONS
+   ========================= */
+
+.action-btn i {
+  font-size: 16px;
+  line-height: 1;
 }
+
+/* Like */
+.action-btn.liked i {
+  color: #fbbf24;
+}
+
+/* Spacing migliore */
+.post-actions {
+  gap: 6px;
+}
+
+/* Micro–interaction */
+.action-btn {
+  transition: background 0.2s, transform 0.15s;
+}
+
+.action-btn:hover {
+  transform: translateY(-1px);
+}
+
+/* Delete */
+.delete-btn-action i {
+  opacity: 0.85;
+}
+
+.post-menu-btn i {
+  pointer-events: none;
+}
+
+}
+

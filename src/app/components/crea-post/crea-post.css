@@ -8,7 +8,7 @@ body {
   max-width: 700px;
   margin: 40px auto;
   padding: 30px;
-  background: rgba(255, 255, 255, 0.6); 
+  background: rgba(252, 194, 128, 0.6); 
   backdrop-filter: blur(15px); 
   border-radius: 25px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.15);
