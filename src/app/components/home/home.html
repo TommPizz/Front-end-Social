@@ -1,115 +1,248 @@
 <div class="home-container">
-  <div class="top-bar">
-    <button class="create-post-btn" (click)="navigateToCreatePost()">➕ Crea Post</button>
-    <button class="logout-btn" (click)="logout()">Logout</button>
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">👔</div>
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Search">
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="btn-create" (click)="navigateToCreatePost()">
+        <span>➕</span>
+        <span>Crea Post</span>
+      </button>
+      <button class="btn-logout" (click)="logout()">Logout</button>
+      <div class="user-avatar">{{ (authService.getCurrentUsername() || 'U').charAt(0).toUpperCase() }}</div>
+    </div>
   </div>
 
-  <h1>Feed dei Post</h1>
-
-  <!-- SEZIONE TENDENZE -->
-  <div class="tendenze-section">
-    <h2>🔥 Tendenze</h2>
-
-    <!-- Loading -->
-    <div *ngIf="loadingTendenze() && mostraTendenze()"><p>Caricamento tendenze...</p></div>
-
-    <!-- Errore -->
-    <div *ngIf="errorTendenze() && mostraTendenze()">
-      {{ errorTendenze() }} 
-      <button (click)="loadTendenze()">Riprova</button>
+  <!-- Container principale -->
+  <div class="container">
+    <!-- Sidebar sinistra -->
+    <div class="sidebar-left">
+      <nav class="nav-menu">
+        <div class="nav-item active">
+          <span class="nav-icon">🏠</span>
+          Home
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">👥</span>
+          Community
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">📺</span>
+          Shows
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">🔖</span>
+          Bookmarks
+        </div>
+      </nav>
     </div>
 
-    <!-- Lista tendenze -->
-    <div *ngIf="!loadingTendenze() && !errorTendenze() && mostraTendenze()">
-      <div *ngIf="tendenze().length === 0"><p>Nessuna tendenza al momento</p></div>
-
-      <div *ngFor="let post of tendenze(); trackBy: trackByPostId" class="tendenza-card">
-        <div class="post-header">
-          <span>@{{ post.usernameUtente }}</span>
-          <span>{{ formatDate(post.dataOra) }}</span>
-        </div>
-
-        <div class="post-content">{{ post.contenuto }}</div>
-
-        <div class="post-footer">
-          <button class="like-btn" (click)="toggleLike(post)" [class.liked]="hasLiked(post.id)">⭐ {{ post.numeroLike || 0 }}</button>
-          <button class="comment-toggle-btn" (click)="toggleCommentiTendenze(post.id)">💬 {{ post.commenti?.length || 0 }}</button>
-          <button class="delete-btn" *ngIf="possoEliminarePost(post)" (click)="apriModaleEliminazionePost(post)">🗑️ Elimina</button>
-        </div>
-
-        <!-- Commenti tendenze -->
-        <div *ngIf="sonoCommentiVisibiliTendenze(post.id)" class="comments-section">
-          <div class="new-comment-form">
-            <textarea [value]="getTestoCommento(post.id)" (input)="aggiornaTestoCommento(post.id, $any($event.target).value)"></textarea>
-            <button class="send-comment-btn" (click)="aggiungiCommento(post.id)">Invia</button>
-          </div>
-
-          <div *ngIf="post.commenti && post.commenti.length > 0">
-            <div *ngFor="let commento of post.commenti; trackBy: trackByCommentId" class="comment">
-              <div class="comment-header">
-                <span class="comment-author">@{{ commento.utente?.username || 'Utente' }}</span>
-                <span class="comment-date">{{ commento.dataOra | date:'short' }}</span>
-              </div>
-              <p class="comment-text">{{ commento.testo }}</p>
-
-              <!-- Solo autore può modificare/eliminare commento -->
-              <div *ngIf="possoModificareCommento(commento)" class="comment-actions-inline">
-                <button class="edit-btn" (click)="iniziaModificaCommento(commento.idCommento, commento.testo)">✏️ Modifica</button>
-                <button class="delete-btn" (click)="apriModaleEliminazioneCommento(post.id, commento.idCommento)">🗑️ Elimina</button>
-              </div>
-            </div>
+    <!-- Feed centrale -->
+    <div class="main-feed">
+      <!-- Box crea post -->
+      <div class="create-post-box">
+        <textarea class="create-post-input" placeholder="Share your knowledge..."></textarea>
+        <div class="create-post-actions">
+          <div class="post-icons">
+            <button class="icon-btn">📷</button>
+            <button class="icon-btn">💻</button>
+            <button class="icon-btn">😊</button>
+            <button class="icon-btn">📎</button>
           </div>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- SEZIONE POST NORMALI -->
-  <div class="main-feed-section">
-    <h2>Tutti i Post</h2>
+      <!-- Loading -->
+      <div *ngIf="loading()" class="loading-state">
+        <div class="empty-state-icon">⏳</div>
+        <h4>Caricamento post...</h4>
+      </div>
 
-    <div *ngIf="loading()"><p>Caricamento post...</p></div>
+      <!-- Errore -->
+      <div *ngIf="error()" class="empty-state">
+        <div class="empty-state-icon">⚠️</div>
+        <h4>Errore nel caricamento</h4>
+        <p>{{ error() }}</p>
+        <button class="btn-create" (click)="loadPosts()">Riprova</button>
+      </div>
 
-    <div *ngIf="error()">
-      {{ error() }} 
-      <button (click)="loadPosts()">Riprova</button>
-    </div>
+      <!-- Nessun post -->
+      <div *ngIf="!loading() && !error() && posts().length === 0" class="empty-state">
+        <div class="empty-state-icon">📭</div>
+        <h4>Nessun post disponibile</h4>
+        <p>Sii il primo a condividere qualcosa!</p>
+      </div>
 
-    <div *ngIf="!loading() && !error()">
-      <div *ngIf="posts().length === 0"><p>Nessun post disponibile</p></div>
-
+      <!-- Lista post -->
       <div *ngFor="let post of posts(); trackBy: trackByPostId" class="post-card">
         <div class="post-header">
-          <span>@{{ post.usernameUtente }}</span>
-          <span>{{ formatDate(post.dataOra) }}</span>
-        </div>
-
-        <div class="post-content">{{ post.contenuto }}</div>
-
-        <div class="post-footer">
-          <button class="like-btn" (click)="toggleLike(post)" [class.liked]="hasLiked(post.id)">⭐ {{ post.numeroLike || 0 }}</button>
-          <button class="comment-toggle-btn" (click)="toggleCommenti(post.id)">💬 {{ post.commenti?.length || 0 }}</button>
-          <button class="delete-btn" *ngIf="possoEliminarePost(post)" (click)="apriModaleEliminazionePost(post)">🗑️ Elimina</button>
-        </div>
-
-        <!-- Commenti post -->
-        <div *ngIf="sonoCommentiVisibili(post.id)" class="comments-section">
-          <div class="new-comment-form">
-            <textarea [value]="getTestoCommento(post.id)" (input)="aggiornaTestoCommento(post.id, $any($event.target).value)"></textarea>
-            <button class="send-comment-btn" (click)="aggiungiCommento(post.id)">Invia</button>
+          <div class="post-author">
+            <div class="author-avatar">{{ post.usernameUtente.charAt(0).toUpperCase() }}</div>
+            <div class="author-info">
+              <div class="author-name">@{{ post.usernameUtente }}</div>
+              <div class="post-time">{{ formatDate(post.dataOra) }}</div>
+            </div>
           </div>
-
+          <button class="post-menu-btn">⋯</button>
+        </div>
+        
+        <div class="post-content">{{ post.contenuto }}</div>
+        
+        <div class="post-actions">
+          <button class="action-btn" [class.liked]="hasLiked(post.id)" (click)="toggleLike(post)">
+            <span>⭐</span>
+            <span>{{ post.numeroLike || 0 }}</span>
+          </button>
+          <button class="action-btn" (click)="toggleCommenti(post.id)">
+            <span>💬</span>
+            <span>{{ (post.commenti && post.commenti.length) || 0 }}</span>
+          </button>
+          <button class="action-btn delete-btn-action" *ngIf="possoEliminarePost(post)" (click)="apriModaleEliminazionePost(post)">
+            <span>🗑️</span>
+            <span>Elimina</span>
+          </button>
+        </div>
+        
+        <!-- Commenti -->
+        <div *ngIf="sonoCommentiVisibili(post.id)" class="comments-section">
+          <div class="comment-form">
+            <div class="comment-avatar">{{ (authService.getCurrentUsername() || 'U').charAt(0).toUpperCase() }}</div>
+            <div class="comment-input-wrapper">
+              <textarea 
+                class="comment-input" 
+                placeholder="Scrivi un commento..."
+                [value]="getTestoCommento(post.id)"
+                (input)="aggiornaTestoCommento(post.id, $any($event.target).value)"></textarea>
+              <button class="comment-submit" (click)="aggiungiCommento(post.id)" [disabled]="isCommentoInCaricamento(post.id)">
+                {{ isCommentoInCaricamento(post.id) ? 'Invio...' : 'Invia' }}
+              </button>
+            </div>
+          </div>
+          
+          <!-- Lista commenti -->
           <div *ngIf="post.commenti && post.commenti.length > 0">
             <div *ngFor="let commento of post.commenti; trackBy: trackByCommentId" class="comment">
-              <div class="comment-header">
-                <span class="comment-author">@{{ commento.utente?.username || 'Utente' }}</span>
-                <span class="comment-date">{{ commento.dataOra | date:'short' }}</span>
+              <div class="comment-avatar">{{ (commento.utente && commento.utente.username || 'U').charAt(0).toUpperCase() }}</div>
+              <div class="comment-body">
+                <!-- Modalità visualizzazione -->
+                <div *ngIf="commentoInModifica() !== commento.idCommento">
+                  <div class="comment-header">
+                    <span class="comment-author">@{{ commento.utente && commento.utente.username || 'Utente' }}</span>
+                    <span class="comment-time">{{ commento.dataOra | date:'short' }}</span>
+                  </div>
+                  <div class="comment-text">{{ commento.testo }}</div>
+                  <div *ngIf="possoModificareCommento(commento)" class="comment-actions">
+                    <button class="comment-action-btn" (click)="iniziaModificaCommento(commento.idCommento, commento.testo)">
+                      ✏️ Modifica
+                    </button>
+                    <button class="comment-action-btn delete" (click)="apriModaleEliminazioneCommento(post.id, commento.idCommento)">
+                      🗑️ Elimina
+                    </button>
+                  </div>
+                </div>
+                
+                <!-- Modalità modifica -->
+                <div *ngIf="commentoInModifica() === commento.idCommento" class="comment-edit">
+                  <textarea 
+                    class="comment-input" 
+                    [value]="testoModifica()"
+                    (input)="testoModifica.set($any($event.target).value)"></textarea>
+                  <div class="edit-actions">
+                    <button class="cancel-btn" (click)="annullaModifica()">Annulla</button>
+                    <button class="save-btn" (click)="salvaModificaCommento(post.id, commento.idCommento)">Salva</button>
+                  </div>
+                </div>
               </div>
-              <p class="comment-text">{{ commento.testo }}</p>
+            </div>
+          </div>
+          
+          <!-- Nessun commento -->
+          <div *ngIf="!post.commenti || post.commenti.length === 0" class="empty-state">
+            <p>Nessun commento ancora. Sii il primo a commentare!</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-              <div *ngIf="possoModificareCommento(commento)" class="comment-actions-inline">
-                <button class="edit-btn" (click)="iniziaModificaCommento(commento.idCommento, commento.testo)">✏️ Modifica</button>
-                <button class="delete-btn" (click)="apriModaleEliminazioneCommento(post.id, commento.idCommento)">🗑️ Elimina</button>
+    <!-- Sidebar destra - Tendenze -->
+    <div class="sidebar-right">
+      <div class="sidebar-section">
+        <h3>🔥 Tendenze</h3>
+        
+        <!-- Loading tendenze -->
+        <div *ngIf="loadingTendenze()" class="loading-state">
+          <p>Caricamento...</p>
+        </div>
+        
+        <!-- Errore tendenze -->
+        <div *ngIf="errorTendenze()" class="empty-state">
+          <p>{{ errorTendenze() }}</p>
+          <button class="comment-submit" (click)="loadTendenze()">Riprova</button>
+        </div>
+        
+        <!-- Lista tendenze -->
+        <div *ngIf="!loadingTendenze() && !errorTendenze()">
+          <div *ngIf="tendenze().length === 0" class="empty-state">
+            <p>Nessuna tendenza al momento</p>
+          </div>
+          
+          <div *ngFor="let post of tendenze(); trackBy: trackByPostId" class="trending-post">
+            <div class="trending-author">@{{ post.usernameUtente }}</div>
+            <div class="trending-content">{{ post.contenuto }}</div>
+            <div class="trending-stats">
+              <div class="trending-stat">⭐ {{ post.numeroLike || 0 }}</div>
+              <div class="trending-stat">💬 {{ (post.commenti && post.commenti.length) || 0 }}</div>
+            </div>
+            <div class="trending-actions">
+              <button class="trending-action-btn" [class.liked]="hasLiked(post.id)" (click)="toggleLike(post)">
+                ⭐
+              </button>
+              <button class="trending-action-btn" (click)="toggleCommentiTendenze(post.id)">
+                💬
+              </button>
+              <button class="trending-action-btn delete" *ngIf="possoEliminarePost(post)" (click)="apriModaleEliminazionePost(post)">
+                🗑️
+              </button>
+            </div>
+            
+            <!-- Commenti tendenze -->
+            <div *ngIf="sonoCommentiVisibiliTendenze(post.id)" class="comments-section-trending">
+              <div class="comment-form">
+                <div class="comment-avatar">{{ (authService.getCurrentUsername() || 'U').charAt(0).toUpperCase() }}</div>
+                <div class="comment-input-wrapper">
+                  <textarea 
+                    class="comment-input" 
+                    placeholder="Scrivi un commento..."
+                    [value]="getTestoCommento(post.id)"
+                    (input)="aggiornaTestoCommento(post.id, $any($event.target).value)"></textarea>
+                  <button class="comment-submit" (click)="aggiungiCommento(post.id)">Invia</button>
+                </div>
+              </div>
+              
+              <div *ngIf="post.commenti && post.commenti.length > 0">
+                <div *ngFor="let commento of post.commenti; trackBy: trackByCommentId" class="comment">
+                  <div class="comment-avatar">{{ (commento.utente && commento.utente.username || 'U').charAt(0).toUpperCase() }}</div>
+                  <div class="comment-body">
+                    <div class="comment-header">
+                      <span class="comment-author">@{{ commento.utente && commento.utente.username || 'Utente' }}</span>
+                      <span class="comment-time">{{ commento.dataOra | date:'short' }}</span>
+                    </div>
+                    <div class="comment-text">{{ commento.testo }}</div>
+                    <div *ngIf="possoModificareCommento(commento)" class="comment-actions">
+                      <button class="comment-action-btn" (click)="iniziaModificaCommento(commento.idCommento, commento.testo)">
+                        ✏️
+                      </button>
+                      <button class="comment-action-btn delete" (click)="apriModaleEliminazioneCommento(post.id, commento.idCommento)">
+                        🗑️
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -118,16 +251,16 @@
     </div>
   </div>
 
-  <!-- MODALE UNIFICATA -->
+  <!-- Modal eliminazione -->
   <div *ngIf="mostraModaleEliminazione()" class="modal-overlay" (click)="chiudiModaleEliminazione()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <h3>Conferma eliminazione</h3>
-
-      <p *ngIf="commentoDaEliminare()">Sei sicuro di voler eliminare questo commento?</p>
-      <p *ngIf="postDaEliminare()">Sei sicuro di voler eliminare questo post?</p>
-
-      <button class="btn-cancel" (click)="chiudiModaleEliminazione()">Annulla</button>
-      <button class="btn-delete" (click)="confermaEliminazione()">Elimina</button>
+      <p *ngIf="commentoDaEliminare()">Sei sicuro di voler eliminare questo commento? Questa azione non può essere annullata.</p>
+      <p *ngIf="postDaEliminare()">Sei sicuro di voler eliminare questo post? Questa azione non può essere annullata.</p>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" (click)="chiudiModaleEliminazione()">Annulla</button>
+        <button class="modal-btn modal-btn-delete" (click)="confermaEliminazione()">Elimina</button>
+      </div>
     </div>
   </div>
 </div>

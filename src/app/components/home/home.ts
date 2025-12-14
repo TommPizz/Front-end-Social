@@ -54,6 +54,7 @@ export class HomeComponent implements OnInit {
   }
 
   logout(): void { this.authService.logout(); }
+  
   navigateToCreatePost(): void { this.router.navigate(['/crea-post']); }
 
   loadPosts(): void {
