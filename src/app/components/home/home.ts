@@ -8,11 +8,12 @@ import { LikeService } from '../../services/like-service';
 import { Observable } from 'rxjs';
 import { CommentoService } from '../../services/commento-service';
 import { Router } from '@angular/router';
+import { ChatComponent } from '../chat/chat';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ChatComponent],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })

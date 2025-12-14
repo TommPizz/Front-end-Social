@@ -1,0 +1,63 @@
+<!-- Pulsante fluttuante -->
+<button class="chat-fab" (click)="toggleChat()" [class.has-unread]="hasUnreadMessages()">
+  <span *ngIf="!isOpen()">💬</span>
+  <span *ngIf="isOpen()">✕</span>
+</button>
+
+<!-- Chat widget -->
+<div class="chat-widget" [class.open]="isOpen()">
+  <div class="chat-header-widget">
+    <div class="header-info">
+      <span class="bot-avatar">🤖</span>
+      <div>
+        <h3>SmarTina</h3>
+        <p class="status">Online</p>
+      </div>
+    </div>
+    <button class="close-btn" (click)="toggleChat()">✕</button>
+  </div>
+
+  <div class="chat-messages-widget">
+    <div *ngFor="let msg of messages()" 
+         [class]="'message-widget message-' + msg.role">
+      <div class="message-avatar-widget">
+        <span *ngIf="msg.role === 'user'">👤</span>
+        <span *ngIf="msg.role === 'assistant'">🤖</span>
+      </div>
+      <div class="message-content-widget">
+        <div class="message-text-widget">{{ msg.content }}</div>
+        <div class="message-time-widget">{{ msg.timestamp | date:'short' }}</div>
+      </div>
+    </div>
+
+    <div *ngIf="loading()" class="message-widget message-assistant">
+      <div class="message-avatar-widget">🤖</div>
+      <div class="message-content-widget">
+        <div class="typing-indicator-widget">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-input-container-widget">
+    <textarea 
+      [ngModel]="userMessage()"
+      (ngModelChange)="userMessage.set($event)"
+      (keypress)="onKeyPress($event)"
+      placeholder="Scrivi un messaggio..."
+      [disabled]="loading()"
+      rows="1"
+      class="chat-input-widget">
+    </textarea>
+    <button 
+      (click)="sendMessage()" 
+      [disabled]="loading() || !userMessage().trim()"
+      class="send-button-widget">
+      <span *ngIf="!loading()">📤</span>
+      <span *ngIf="loading()">⏳</span>
+    </button>
+  </div>
+</div>
