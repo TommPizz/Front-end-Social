@@ -1,4 +1,4 @@
-import { Component, OnInit, PLATFORM_ID, inject, signal } from '@angular/core';
+import { Component, OnInit, PLATFORM_ID, inject, ChangeDetectorRef, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,7 +13,7 @@ import { ChatService, ChatMessage } from '../../services/chat-service';
 })
 export class ChatComponent implements OnInit {
   
-  messages = signal<ChatMessage[]>([]);  // ← USA SIGNAL
+  messages = signal<ChatMessage[]>([]);
   userMessage = signal('');
   loading = signal(false);
   userId: string = 'user_' + Math.random().toString(36).substr(2, 9);
@@ -22,6 +22,7 @@ export class ChatComponent implements OnInit {
   
   private platformId = inject(PLATFORM_ID);
   private isBrowser: boolean;
+  private cdr = inject(ChangeDetectorRef);
 
   constructor(private chatService: ChatService) {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -38,7 +39,10 @@ export class ChatComponent implements OnInit {
     if (this.isOpen()) {
       this.hasUnreadMessages.set(false);
       if (this.isBrowser) {
-        setTimeout(() => this.scrollToBottom(), 100);
+        setTimeout(() => {
+          this.scrollToBottom();
+          this.cdr.detectChanges();
+        }, 100);
       }
     }
   }
@@ -62,11 +66,14 @@ export class ChatComponent implements OnInit {
         if (!this.isOpen()) {
           this.hasUnreadMessages.set(true);
         }
+        
+        this.cdr.detectChanges();
       },
       error: (error) => {
-        console.error('Errore:', error);
+        console.error('[CHAT] Errore:', error);
         this.addMessage('assistant', 'Mi dispiace, si è verificato un errore. Riprova.');
         this.loading.set(false);
+        this.cdr.detectChanges();
       }
     });
   }
@@ -79,7 +86,12 @@ export class ChatComponent implements OnInit {
     }]);
     
     if (this.isBrowser) {
-      setTimeout(() => this.scrollToBottom(), 50);
+      this.scrollToBottom();
+      this.cdr.detectChanges();
+      
+      setTimeout(() => {
+        this.scrollToBottom();
+      }, 50);
     }
   }
 

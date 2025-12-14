@@ -1,7 +1,16 @@
-<!-- Pulsante fluttuante -->
-<button class="chat-fab" (click)="toggleChat()" [class.has-unread]="hasUnreadMessages()">
-  <span *ngIf="!isOpen()">💬</span>
-  <span *ngIf="isOpen()">✕</span>
+<button 
+  class="chat-fab" 
+  (click)="toggleChat()" 
+  [class.has-unread]="hasUnreadMessages()">
+  
+  <!-- GIF animata (nessun problema di autoplay) -->
+  <img 
+    *ngIf="!isOpen()"
+    src="../../assets/images/smartina-bot.gif"
+    alt="SmarTina"
+    class="chat-fab-video">
+  
+  <span *ngIf="isOpen()" class="close-icon">✕</span>
 </button>
 
 <!-- Chat widget -->
