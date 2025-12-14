@@ -1,22 +1,36 @@
 <div class="home-container">
-  <!-- Header -->
-  <div class="header">
-    <div class="header-left">
-      <div class="logo">👔</div>
-      <div class="search-bar">
-        <span class="search-icon">🔍</span>
-        <input type="text" placeholder="Search">
+    <!-- Header -->
+    <div class="header">
+
+      <div class="header-left">
+        <div class="logo" aria-label="Home">
+          <i class="fa-solid fa-briefcase"></i>
+        </div>
+
+        <div class="search-bar">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" placeholder="Search">
+        </div>
+      </div>
+
+      <div class="header-right">
+
+        <button class="btn-create" (click)="navigateToCreatePost()">
+          <i class="fa-solid fa-plus"></i>
+          <span>Crea Post</span>
+        </button>
+
+        <button class="btn-logout" (click)="logout()" aria-label="Logout">
+          <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+
+        <div class="user-avatar">
+          {{ (authService.getCurrentUsername() || 'U').charAt(0).toUpperCase() }}
+        </div>
+
       </div>
     </div>
-    <div class="header-right">
-      <button class="btn-create" (click)="navigateToCreatePost()">
-        <span>➕</span>
-        <span>Crea Post</span>
-      </button>
-      <button class="btn-logout" (click)="logout()">Logout</button>
-      <div class="user-avatar">{{ (authService.getCurrentUsername() || 'U').charAt(0).toUpperCase() }}</div>
-    </div>
-  </div>
+
 
   <!-- Container principale -->
   <div class="container">
@@ -24,38 +38,14 @@
     <div class="sidebar-left">
       <nav class="nav-menu">
         <div class="nav-item active">
-          <span class="nav-icon">🏠</span>
+          <i class="fas fa-home"></i>
           Home
-        </div>
-        <div class="nav-item">
-          <span class="nav-icon">👥</span>
-          Community
-        </div>
-        <div class="nav-item">
-          <span class="nav-icon">📺</span>
-          Shows
-        </div>
-        <div class="nav-item">
-          <span class="nav-icon">🔖</span>
-          Bookmarks
         </div>
       </nav>
     </div>
 
     <!-- Feed centrale -->
     <div class="main-feed">
-      <!-- Box crea post -->
-      <div class="create-post-box">
-        <textarea class="create-post-input" placeholder="Share your knowledge..."></textarea>
-        <div class="create-post-actions">
-          <div class="post-icons">
-            <button class="icon-btn">📷</button>
-            <button class="icon-btn">💻</button>
-            <button class="icon-btn">😊</button>
-            <button class="icon-btn">📎</button>
-          </div>
-        </div>
-      </div>
 
       <!-- Loading -->
       <div *ngIf="loading()" class="loading-state">
@@ -81,32 +71,53 @@
       <!-- Lista post -->
       <div *ngFor="let post of posts(); trackBy: trackByPostId" class="post-card">
         <div class="post-header">
-          <div class="post-author">
-            <div class="author-avatar">{{ post.usernameUtente.charAt(0).toUpperCase() }}</div>
-            <div class="author-info">
-              <div class="author-name">@{{ post.usernameUtente }}</div>
-              <div class="post-time">{{ formatDate(post.dataOra) }}</div>
+            <div class="post-author">
+              <div class="author-avatar">
+                {{ post.usernameUtente.charAt(0).toUpperCase() }}
+              </div>
+
+              <div class="author-info">
+                <div class="author-name">@{{ post.usernameUtente }}</div>
+                <div class="post-time">{{ formatDate(post.dataOra) }}</div>
+              </div>
             </div>
+
+            <button class="post-menu-btn" aria-label="Azioni post">
+              <i class="fa-solid fa-ellipsis"></i>
+            </button>
           </div>
-          <button class="post-menu-btn">⋯</button>
-        </div>
-        
-        <div class="post-content">{{ post.contenuto }}</div>
-        
-        <div class="post-actions">
-          <button class="action-btn" [class.liked]="hasLiked(post.id)" (click)="toggleLike(post)">
-            <span>⭐</span>
-            <span>{{ post.numeroLike || 0 }}</span>
-          </button>
-          <button class="action-btn" (click)="toggleCommenti(post.id)">
-            <span>💬</span>
-            <span>{{ (post.commenti && post.commenti.length) || 0 }}</span>
-          </button>
-          <button class="action-btn delete-btn-action" *ngIf="possoEliminarePost(post)" (click)="apriModaleEliminazionePost(post)">
-            <span>🗑️</span>
-            <span>Elimina</span>
-          </button>
-        </div>
+
+          <div class="post-content">
+            {{ post.contenuto }}
+          </div>
+
+          <div class="post-actions">
+
+            <!-- LIKE -->
+            <button
+              class="action-btn"
+              [class.liked]="hasLiked(post.id)"
+              (click)="toggleLike(post)">
+              <i class="fa-solid fa-star"></i>
+              <span>{{ post.numeroLike || 0 }}</span>
+            </button>
+
+            <!-- COMMENTI -->
+            <button class="action-btn" (click)="toggleCommenti(post.id)">
+              <i class="fa-regular fa-comment"></i>
+              <span>{{ (post.commenti && post.commenti.length) || 0 }}</span>
+            </button>
+
+            <!-- ELIMINA -->
+            <button
+              class="action-btn delete-btn-action"
+              *ngIf="possoEliminarePost(post)"
+              (click)="apriModaleEliminazionePost(post)">
+              <i class="fa-regular fa-trash-can"></i>
+              <span>Elimina</span>
+            </button>
+
+          </div>
         
         <!-- Commenti -->
         <div *ngIf="sonoCommentiVisibili(post.id)" class="comments-section">
@@ -138,10 +149,10 @@
                   <div class="comment-text">{{ commento.testo }}</div>
                   <div *ngIf="possoModificareCommento(commento)" class="comment-actions">
                     <button class="comment-action-btn" (click)="iniziaModificaCommento(commento.idCommento, commento.testo)">
-                      ✏️ Modifica
+                      <i class="fas fa-pen"></i> Modifica
                     </button>
                     <button class="comment-action-btn delete" (click)="apriModaleEliminazioneCommento(post.id, commento.idCommento)">
-                      🗑️ Elimina
+                      <i class="fa-regular fa-trash-can"></i> Elimina
                     </button>
                   </div>
                 </div>
@@ -172,7 +183,7 @@
     <!-- Sidebar destra - Tendenze -->
     <div class="sidebar-right">
       <div class="sidebar-section">
-        <h3>🔥 Tendenze</h3>
+        <h3><i class="fas fa-chart-line"></i> Tendenze</h3>
         
         <!-- Loading tendenze -->
         <div *ngIf="loadingTendenze()" class="loading-state">
@@ -195,18 +206,18 @@
             <div class="trending-author">@{{ post.usernameUtente }}</div>
             <div class="trending-content">{{ post.contenuto }}</div>
             <div class="trending-stats">
-              <div class="trending-stat">⭐ {{ post.numeroLike || 0 }}</div>
-              <div class="trending-stat">💬 {{ (post.commenti && post.commenti.length) || 0 }}</div>
+              <div class="trending-stat"><i class="fa-solid fa-star"></i> {{ post.numeroLike || 0 }}</div>
+              <div class="trending-stat"><i class="fa-regular fa-comment"></i> {{ (post.commenti && post.commenti.length) || 0 }}</div>
             </div>
             <div class="trending-actions">
               <button class="trending-action-btn" [class.liked]="hasLiked(post.id)" (click)="toggleLike(post)">
-                ⭐
+                <i class="fa-solid fa-star"></i>
               </button>
               <button class="trending-action-btn" (click)="toggleCommentiTendenze(post.id)">
-                💬
+                <i class="fa-regular fa-comment"></i>
               </button>
               <button class="trending-action-btn delete" *ngIf="possoEliminarePost(post)" (click)="apriModaleEliminazionePost(post)">
-                🗑️
+                <i class="fa-regular fa-trash-can"></i>
               </button>
             </div>
             
@@ -235,10 +246,10 @@
                     <div class="comment-text">{{ commento.testo }}</div>
                     <div *ngIf="possoModificareCommento(commento)" class="comment-actions">
                       <button class="comment-action-btn" (click)="iniziaModificaCommento(commento.idCommento, commento.testo)">
-                        ✏️
+                        <i class="fas fa-pen"></i>
                       </button>
                       <button class="comment-action-btn delete" (click)="apriModaleEliminazioneCommento(post.id, commento.idCommento)">
-                        🗑️
+                        <i class="fa-regular fa-trash-can"></i>
                       </button>
                     </div>
                   </div>
