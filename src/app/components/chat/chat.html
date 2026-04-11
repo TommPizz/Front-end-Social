@@ -6,7 +6,7 @@
   <!-- GIF animata (nessun problema di autoplay) -->
   <img 
     *ngIf="!isOpen()"
-    src="../../assets/images/smartina-bot.gif"
+    src="images/smartina.png"
     alt="SmarTina"
     class="chat-fab-video">
   
@@ -17,7 +17,7 @@
 <div class="chat-widget" [class.open]="isOpen()">
   <div class="chat-header-widget">
     <div class="header-info">
-      <span class="bot-avatar">🤖</span>
+      <img src="images/smartina.png" alt="SmarTina" class="bot-avatar">
       <div>
         <h3>SmarTina</h3>
         <p class="status">Online</p>
@@ -31,7 +31,7 @@
          [class]="'message-widget message-' + msg.role">
       <div class="message-avatar-widget">
         <span *ngIf="msg.role === 'user'">👤</span>
-        <span *ngIf="msg.role === 'assistant'">🤖</span>
+        <span *ngIf="msg.role === 'assistant'"><img src="images/smartina.png" alt="SmarTina" class="message-avatar-widget bot-avatar-msg"></span>
       </div>
       <div class="message-content-widget">
         <div class="message-text-widget">{{ msg.content }}</div>
@@ -40,7 +40,7 @@
     </div>
 
     <div *ngIf="loading()" class="message-widget message-assistant">
-      <div class="message-avatar-widget">🤖</div>
+      <img src="images/smartina.png" alt="SmarTina" class="message-avatar-widget bot-avatar-msg">
       <div class="message-content-widget">
         <div class="typing-indicator-widget">
           <span></span>
